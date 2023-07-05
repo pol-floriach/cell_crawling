@@ -70,7 +70,6 @@ function phase_field(params)
         ϕ_tot = sum(ϕ)
 
         #if timestep % 500 == 0
-        actualtime = round(time,digits=1)
         heatmap(ϕ, title = "time = $actualtime", colormap = :Accent_4);
         #    savefig(p1,"fig_$time.png")
         #end
@@ -101,7 +100,7 @@ const mb = 1.0
 
 params = (nx, ny, dt, dx, stoptime, rodx, ro, threshold, vol, α, ϵ, γ, τ, ma, mb)
 
-# ----- VECTOR INICIALIZATION -----
+# ----- VECTOR INICIALIZATION ----- #
 
 ϕ = zeros(nx,ny);    # Phase field
 ∇ϕ = zeros(nx,ny);   # Gradient
@@ -112,6 +111,6 @@ params = (nx, ny, dt, dx, stoptime, rodx, ro, threshold, vol, α, ϵ, γ, τ, ma
 ixyp1 = zeros(Int,nx);
 ixym1 = zeros(Int,nx);
 
-
+#  ----- RUN SIMULATION ----- # 
 
 phase_field(params)
