@@ -1,6 +1,6 @@
 using Plots 
 # include("/home/pol/cell_crawling/codis/funcions.jl");
-include("/home/pol/phase_field/funcions.jl")
+include("/home/pol/cell_crawling/funcions.jl")
 using .PhaseFieldConstants, .Numerical, .Initialize, .OtherFunctions
 # ENV["GKSwstype"]="nul"
 
@@ -30,8 +30,8 @@ begin
         end every 500
     end
     # Function for integration for multiple cells
-    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, params, repulsion, stoptime)
-        dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2 = params
+    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, params::Params, repulsion, stoptime)
+        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
         nx, ny = size(ϕ[1])
         # Initialization of phase field
         # generation_phi!(ϕ[1],20,20) ; generation_phi!(ϕ[2],80,80)
@@ -66,11 +66,10 @@ begin
         gif(anim, "pf_$(N)_cells_w_repulsion_$(repulsion).gif", fps = 15);
     end
     # Function for integration of multiple cells, with external concentration diffusion
-    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, c::Mat,params, repulsion, stoptime)
-        dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2 = params
+    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, c::Mat,params::Params_diff, repulsion, stoptime)
+        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
         nx, ny = size(ϕ[1])
         # Initialization of phase field
-        # generation_phi!(ϕ[1],20,20) ; generation_phi!(ϕ[2],80,80)
         generation_phi_equis!(ϕ, N, rodx, dx, ϵ)
         ϕ_tot = vol*ones(N)
         ∇ϕ_tot = sum(∇ϕ)
@@ -80,15 +79,14 @@ begin
         anim = @animate for timestep in 1:Int(stoptime/dt)
             # Update values for laplacian and gradient
 
-            @. gradient!(ϕ,∇ϕ,dx);
-            @. laplacian!(ϕ,∇²ϕ,dx); 
-            gradient!(c,∇c,dx);
-            laplacian!(c,∇²c,dx);
+            @. gradient!(ϕ,∇ϕ,dx,nx,ny);
+            @. laplacian!(ϕ,∇²ϕ,dx,nx,ny); 
+            gradient!(c,∇c,dx,nx,ny);
+            laplacian!(c,∇²c,dx,nx,ny);
             
             # Next step
             ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
-            dċ = k*c*∇ϕ_tot - σ*c + ∇²c
-            c += dt*()
+            c += dt*(k*c*∇ϕ_tot - σ*c + ∇²c)
             for k in 1:N
                 # ∇ϕ_iter = @view ∇ϕ[k]
                 dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k])  + α*c*∇c[k]
@@ -114,7 +112,10 @@ nx = ny = 100
 ξ, ϕ, ∇ϕ, ∇²ϕ  = initialization(N, nx,ny);
 stoptime = 10.0
 repulsion = 1.0
+params = Params(dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2)
 
 @time PhaseField!(ϕ, ∇ϕ, ∇²ϕ, ξ, params, repulsion, stoptime)
 
 
+params = ParamsDiff(dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2, k, σ_diff)
+ξ, c, ϕ, ∇ϕ, ∇²ϕ  = initialization(N, nx,ny);

@@ -1,30 +1,62 @@
 # ----- CONSTANTS ----- #
 module PhaseFieldConstants
-    export params, repulsion, stoptime
+    export dt, dx, rodx, vol, ϵ, γ, τ_ξ, σ2, k, σ_c, α, repulsion, stoptime
+    export Params, Params_diff
+
     # Integration constants 
-    const nx = 90;
-    const ny = 90;
     const dt = 0.001;
     const dx = 0.15;
-    stoptime = 50.0
 
     # Phase Field
     const rodx = 20;
     const ro = rodx*dx;
     const vol = π*rodx^2;
 
-    const α = 3.0;
     const ϵ = 0.750;
     const γ = 2.0;
     const τ = 2.0;
     const β = 0.50;
-    repulsion = 0.70; # repulsion
+    repulsion = 0.70; 
     # Noise 
     const σ2 = 0.0150;
     const τ_ξ = 10.0;
 
-    params = (dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2);
+    # External diffusion
+    const k = 1.0
+    const σ_c = 1.0
+    const α = 1.0
+
+    struct Params
+        dt::Float64
+        dx::Float64
+        rodx::Float64
+        vol::Float64
+        ϵ::Float64
+        γ::Float64
+        τ::Float64
+        β::Float64
+        τ_ξ::Float64
+        σ2::Float64
+    end
+
+    struct ParamsDiff
+        dt::Float64
+        dx::Float64
+        rodx::Float64
+        vol::Float64
+        ϵ::Float64
+        γ::Float64
+        τ::Float64
+        β::Float64
+        τ_ξ::Float64
+        σ2::Float64
+        k::Float64
+        σ_c::Float64
+        α::Float64
+    end
 end
+
+
 
 # ----- FUNCTIONS ----- #
 module Numerical
@@ -116,6 +148,23 @@ module Initialize
             ∇²ϕ = [zeros(nx,ny) for i in 1:N];
         end
         return ξ, ϕ, ∇ϕ, ∇²ϕ
+    end
+    # Vector initialization with external concentration diffusion
+    function initialization_wdiffusion(N, nx, ny)
+        ξ = randn(nx,ny);
+        c = randn(nx,ny);
+        if N == 1 
+            # One cell
+            ϕ   = zeros(nx,ny);     # Phase field
+            ∇ϕ  = zeros(nx,ny);     # Gradient
+            ∇²ϕ = zeros(nx,ny);     # Laplacian
+        else
+            # Multiple cells
+            ϕ   = [zeros(nx,ny) for i in 1:N];
+            ∇ϕ  = [zeros(nx,ny) for i in 1:N];
+            ∇²ϕ = [zeros(nx,ny) for i in 1:N];
+        end
+        return ξ, c, ϕ, ∇ϕ, ∇²ϕ
     end
 end
 
