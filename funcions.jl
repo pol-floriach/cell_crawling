@@ -1,6 +1,6 @@
 # ----- CONSTANTS ----- #
 module PhaseFieldConstants
-    export dt, dx, rodx, vol, ϵ, γ, τ_ξ, σ2, k, σ_c, α, repulsion, stoptime
+    export dt, dx, rodx, vol, ϵ, γ, τ, β, σ2, τ_ξ, k, σ_c, α, repulsion
     export Params, ParamsDiff
 
     # Integration constants 
@@ -117,7 +117,7 @@ module Initialize
         io = jo = rodx + 2
         ro2 = 2*rodx
         k = 0
-            for ky in 1:Int(sqrt(N))
+        for ky in 1:Int(sqrt(N))
                 io = rodx+2
                 for kx in 1:Int(sqrt(N))
                     k += 1; 
@@ -165,15 +165,29 @@ module Initialize
     end
 end
 
+# Other used functions
+module OtherFunctions
+    export Gd
+    # G'(ϕ)
+    Gd(ϕ::Matrix{Float64}) = @. 72.0*(ϕ * (1-ϕ)*(ϕ-0.5))
+    Gd(ϕ::Float64) = @. 72.0*(ϕ * (1-ϕ)*(ϕ-0.5))
+end
+
+
+# Main functions, used for the simulation
 module PhaseField 
     export PhaseField!
-    using Plots
-    # Function for integration for a single cell
+    using Plots, ..Initialize, ..Numerical, ..OtherFunctions
+    using ..PhaseFieldConstants: Params, ParamsDiff
+
     Mat = Matrix{Float64}
     ArrMat = Vector{Mat}
-    # Function for integration, vectorized
-    function PhaseField!(ϕ::Mat, ∇ϕ::Mat, ∇²ϕ::Mat, ξ::Mat, params)
-        dt, dx, stoptime, rodx, ro,  vol, α, ϵ, γ, τ, β, repulsion, τ_ξ, σ2 = params
+
+    # Function for integration for a single cell
+    function PhaseField!(ϕ::Mat, ∇ϕ::Mat, ∇²ϕ::Mat, ξ::Mat, params::Params, stoptime)
+        # dt, dx, stoptime, rodx, ro,  vol, α, ϵ, γ, τ, β, repulsion, τ_ξ, σ2 = params
+        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
+
         # Initialization of phase field
         generation_phi!(ϕ,30,50)
         ϕ_tot = vol
@@ -185,7 +199,7 @@ module PhaseField
             gradient!(ϕ,∇ϕ,dx) 
 
             # Next step
-            dϕ =  γ/τ * (∇²ϕ + Gd(ϕ)/(ϵ^2)) - ma/τ * (ϕ_tot-vol) * ∇ϕ + ξ.*∇ϕ  
+            dϕ =  γ/τ * (∇²ϕ + Gd(ϕ)/(ϵ^2)) - β/τ * (ϕ_tot-vol) * ∇ϕ + ξ.*∇ϕ  
             ϕ = ϕ + dt*dϕ
             ξ = ξ + dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
             ϕ_tot = sum(ϕ)        
@@ -194,7 +208,7 @@ module PhaseField
         end every 500
     end
     # Function for integration for multiple cells
-    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, params::Params, repulsion, stoptime)
+    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, params::Params, repulsion, stoptime)
         (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
         nx, ny = size(ϕ[1])
         # Initialization of phase field
@@ -229,9 +243,10 @@ module PhaseField
         end every 500
         gif(anim, "pf_$(N)_cells_w_repulsion_$(repulsion).gif", fps = 15);
     end
+
     # Function for integration of multiple cells, with external concentration diffusion
-    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, c::Mat,params::Params_diff, repulsion, stoptime)
-        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
+    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, c::Mat, N, params::ParamsDiff, repulsion, stoptime)
+        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2, k, σ_c, α ) = params
         nx, ny = size(ϕ[1])
         # Initialization of phase field
         generation_phi_equis!(ϕ, N, rodx, dx, ϵ)
@@ -250,7 +265,7 @@ module PhaseField
             
             # Next step
             ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
-            c += dt*(k*c*∇ϕ_tot - σ*c + ∇²c)
+            c += dt*(k*c*∇ϕ_tot - σ_c*c + ∇²c)
             for k in 1:N
                 # ∇ϕ_iter = @view ∇ϕ[k]
                 dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k])  + α*c*∇c[k]
@@ -270,12 +285,7 @@ module PhaseField
 
 end
 
-module OtherFunctions
-    export Gd
-    # G'(ϕ)
-    Gd(ϕ::Matrix{Float64}) = @. 72.0*(ϕ * (1-ϕ)*(ϕ-0.5))
-    Gd(ϕ::Float64) = @. 72.0*(ϕ * (1-ϕ)*(ϕ-0.5))
-end
+
 
 
  # Other functions not used now 
