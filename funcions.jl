@@ -1,7 +1,7 @@
 # ----- CONSTANTS ----- #
 module PhaseFieldConstants
     export dt, dx, rodx, vol, ϵ, γ, τ_ξ, σ2, k, σ_c, α, repulsion, stoptime
-    export Params, Params_diff
+    export Params, ParamsDiff
 
     # Integration constants 
     const dt = 0.001;
@@ -56,8 +56,6 @@ module PhaseFieldConstants
     end
 end
 
-
-
 # ----- FUNCTIONS ----- #
 module Numerical
     export gradient!, laplacian!
@@ -102,7 +100,6 @@ module Numerical
         nothing
     end
 end
-
 
 module Initialize
     export generation_phi!, generation_phi_equis!, initialization
@@ -168,77 +165,110 @@ module Initialize
     end
 end
 
+module PhaseField 
+    export PhaseField!
+    using Plots
+    # Function for integration for a single cell
+    Mat = Matrix{Float64}
+    ArrMat = Vector{Mat}
+    # Function for integration, vectorized
+    function PhaseField!(ϕ::Mat, ∇ϕ::Mat, ∇²ϕ::Mat, ξ::Mat, params)
+        dt, dx, stoptime, rodx, ro,  vol, α, ϵ, γ, τ, β, repulsion, τ_ξ, σ2 = params
+        # Initialization of phase field
+        generation_phi!(ϕ,30,50)
+        ϕ_tot = vol
+        amplitude = sqrt(2*σ2*dt)/dx
 
-# module PhaseField 
-#     export PhaseField!
+        @gif for timestep in 1:Int(stoptime/dt)
+            # Update values for laplacian and gradient
+            laplacian!(ϕ,∇²ϕ,dx); 
+            gradient!(ϕ,∇ϕ,dx) 
 
-#     using Plots
-#     # Function for integration for a single cell
-#     Mat = Matrix{Float64}
-#     ArrMat = Vector{Mat}
-#     function PhaseField!(ϕ::Mat, ∇ϕ::Mat, ∇²ϕ::Mat, ξ::Mat, params)
-#         dt, dx, stoptime, rodx, ro, vol, α, ϵ, γ, τ, β, repulsion, τ_ξ = params
-#         # Initialization of phase field
-#         # generation_index!()
-#         generation_phi!(ϕ,30,50)
-#         ϕ_tot = vol
-#         amplitude = sqrt(2*σ2*dt)/dx
+            # Next step
+            dϕ =  γ/τ * (∇²ϕ + Gd(ϕ)/(ϵ^2)) - ma/τ * (ϕ_tot-vol) * ∇ϕ + ξ.*∇ϕ  
+            ϕ = ϕ + dt*dϕ
+            ξ = ξ + dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
+            ϕ_tot = sum(ϕ)        
+            # Plot
+            heatmap(ϕ, title = "time = $(round((timestep*dt),digits = 1))", colormap = :Accent_4, colorbar = false, size = (800,800));
+        end every 500
+    end
+    # Function for integration for multiple cells
+    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, params::Params, repulsion, stoptime)
+        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
+        nx, ny = size(ϕ[1])
+        # Initialization of phase field
+        # generation_phi!(ϕ[1],20,20) ; generation_phi!(ϕ[2],80,80)
+        generation_phi_equis!(ϕ, N, rodx, dx, ϵ)
 
-#         @gif for timestep in 1:Int(stoptime/dt)
-#             # Update values for laplacian and gradient
-#             laplacian!(ϕ,∇²ϕ,dx); 
-#             gradient!(ϕ,∇ϕ,dx) 
+        ϕ_tot = vol*ones(N)
+        ∇ϕ_tot = sum(∇ϕ)
+        amplitude = sqrt(2*σ2*dt)/dx
+        dϕ = [zeros(nx,ny) for i in 1:N]
 
-#             # Next step
-#             dϕ =  γ/τ * (∇²ϕ + Gd(ϕ)/(ϵ^2)) - ma/τ * (ϕ_tot-vol) * ∇ϕ + ξ.*∇ϕ  
-#             ϕ = ϕ + dt*dϕ
-#             ξ = ξ + dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
-#             ϕ_tot = sum(ϕ)        
-#             # Plot
-#             heatmap(ϕ, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800));
-#         end every 500
-#     end
+        anim = @animate for timestep in 1:Int(stoptime/dt)
+            # Update values for laplacian and gradient
+            @. laplacian!(ϕ,∇²ϕ,dx, nx, ny); 
+            @. gradient!(ϕ,∇ϕ,dx, nx, ny);
 
-#     # Function for integration for two cells
-#     function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, params, repulsion, stoptime)
-#         dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2 = params
-#         nx, ny = size(ϕ[1])
-#         # Initialization of phase field
-#         # generation_phi!(ϕ[1],20,20) ; generation_phi!(ϕ[2],80,80)
-#         generation_phi_equis!(ϕ, N, rodx, dx, ϵ)
-
-#         ϕ_tot = vol*ones(N)
-#         ∇ϕ_tot = sum(∇ϕ)
-#         amplitude = sqrt(2*σ2*dt)/dx
-#         dϕ = [zeros(nx,ny) for i in 1:N]
-
-#         anim = @animate for timestep in 1:Int(stoptime/dt)
-#             # Update values for laplacian and gradient
-#             @. laplacian!(ϕ,∇²ϕ,dx); 
-#             @. gradient!(ϕ,∇ϕ,dx);
-
-#             # Next step
-#             ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
+            # Next step
+            ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
             
-#             for k in 1:N
-#                 # ∇ϕ_iter = @view ∇ϕ[k]
-#                 dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k])  
-#                 # dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - ma/τ *(ϕ_tot[k]-vol)*∇ϕ_iter + ξ*∇ϕ_iter   - repulsion*∇ϕ_iter*(∇ϕ_tot - ∇ϕ_iter)  
+            for k in 1:N
+                # ∇ϕ_iter = @view ∇ϕ[k]
+                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k])  
+                # dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - ma/τ *(ϕ_tot[k]-vol)*∇ϕ_iter + ξ*∇ϕ_iter   - repulsion*∇ϕ_iter*(∇ϕ_tot - ∇ϕ_iter)  
 
-#                 ϕ[k] = ϕ[k] + dt*dϕ[k]
-#                 ϕ_tot[k] = sum(ϕ[k])
-#             end
-#             ϕ_all = sum(ϕ)
-#             ∇ϕ_tot = sum(∇ϕ)
+                ϕ[k] = ϕ[k] + dt*dϕ[k]
+                ϕ_tot[k] = sum(ϕ[k])
+            end
+            ϕ_all = sum(ϕ)
+            ∇ϕ_tot = sum(∇ϕ)
+            # Plot
+            heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_3, colorbar = false, size = (800,800))
+        end every 500
+        gif(anim, "pf_$(N)_cells_w_repulsion_$(repulsion).gif", fps = 15);
+    end
+    # Function for integration of multiple cells, with external concentration diffusion
+    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, c::Mat,params::Params_diff, repulsion, stoptime)
+        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
+        nx, ny = size(ϕ[1])
+        # Initialization of phase field
+        generation_phi_equis!(ϕ, N, rodx, dx, ϵ)
+        ϕ_tot = vol*ones(N)
+        ∇ϕ_tot = sum(∇ϕ)
+        amplitude = sqrt(2*σ2*dt)/dx
+        dϕ = [zeros(nx,ny) for i in 1:N]
 
-#             # Plot
-#             heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_3, colorbar = false, size = (800,800))
-#         end every 500
-#         gif(anim, "pf_$(N)_cells_w_repulsion_$(repulsion).gif", fps = 15);
-#     end
+        anim = @animate for timestep in 1:Int(stoptime/dt)
+            # Update values for laplacian and gradient
 
-# end
+            @. gradient!(ϕ,∇ϕ,dx,nx,ny);
+            @. laplacian!(ϕ,∇²ϕ,dx,nx,ny); 
+            gradient!(c,∇c,dx,nx,ny);
+            laplacian!(c,∇²c,dx,nx,ny);
+            
+            # Next step
+            ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
+            c += dt*(k*c*∇ϕ_tot - σ*c + ∇²c)
+            for k in 1:N
+                # ∇ϕ_iter = @view ∇ϕ[k]
+                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k])  + α*c*∇c[k]
+                # dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - ma/τ *(ϕ_tot[k]-vol)*∇ϕ_iter + ξ*∇ϕ_iter   - repulsion*∇ϕ_iter*(∇ϕ_tot - ∇ϕ_iter)  
 
+                ϕ[k] = ϕ[k] + dt*dϕ[k]
+                ϕ_tot[k] = sum(ϕ[k])
+            end
+            ϕ_all = sum(ϕ)
+            ∇ϕ_tot = sum(∇ϕ)
+
+            # Plot
+            heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_3, colorbar = false, size = (800,800))
+        end every 500
+        gif(anim, "pf_$(N)_cells_w_repulsion_$(repulsion).gif", fps = 15);
+    end
+
+end
 
 module OtherFunctions
     export Gd

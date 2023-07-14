@@ -2,6 +2,7 @@ using Plots
 # include("/home/pol/cell_crawling/codis/funcions.jl");
 include("/home/pol/cell_crawling/funcions.jl")
 using .PhaseFieldConstants, .Numerical, .Initialize, .OtherFunctions
+using .PhaseField
 # ENV["GKSwstype"]="nul"
 
 begin
