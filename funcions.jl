@@ -106,7 +106,7 @@ module Initialize
     function generation_phi_equis!(ϕ,N,rodx,dx,ϵ)
         ro = rodx * dx
         nx, ny = size(ϕ[1])
-        io = jo = rodx + 2
+        io = jo = rodx + 1
         ro2 = 2*rodx
         k = 0
         for ky in 1:Int(sqrt(N))
@@ -117,9 +117,9 @@ module Initialize
                         r = dx*sqrt((i-io)^2+(j-jo)^2) ;
                         ϕ[k][i,j] = 0.5+0.5*tanh((ro-r)/(dx*ϵ));
                     end
-                io += ro2 + 2
+                io += ro2 + 1
                 end
-            jo += ro2 + 2
+            jo += ro2 + 1
         end
     end
     # Vector initialization
@@ -141,10 +141,17 @@ module Initialize
     # Vector initialization with external concentration diffusion
     function initialization_wdiffusion(N, nx, ny)
         ξ = randn(nx,ny);
-        c = randn(nx,ny);
+        c = zeros(nx,ny);
+        
+        for j in Int(35):Int(45)
+            for i in 60:70
+                c[i,j] = 1
+            end
+        end
+
         ∇c = zeros(nx,ny;)
         ∇²c = zeros(nx,ny);
-        if N == 1 
+        if N == 0 
             # One cell
             ϕ   = zeros(nx,ny);     # Phase field
             ∇ϕ  = zeros(nx,ny);     # Gradient
@@ -250,6 +257,8 @@ module PhaseField
         amplitude = sqrt(2*σ2*dt)/dx
         dϕ = [zeros(nx,ny) for i in 1:N]
 
+        ϕ_tot_plot = sum(ϕ)
+
         anim = @animate for timestep in 1:Int(round(stoptime/dt))
             # Update values for laplacian and gradient
 
@@ -262,7 +271,7 @@ module PhaseField
             ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
             c += dt*(k*∇ϕ_tot - σ_c*c + D*∇²c)
             for k in 1:N
-                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α*c*∇c[k]
+                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α/τ*c*∇c[k]
 
                 ϕ[k] = ϕ[k] + dt*dϕ[k]
                 ϕ_tot[k] = sum(ϕ[k])
@@ -271,13 +280,16 @@ module PhaseField
             ∇ϕ_tot = sum(∇ϕ)
 
             # Plot
-            heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_3, colorbar = false, size = (800,800))
+            for i in eachindex(ϕ_tot_plot)
+                ϕ_all[i] > 1 ? ϕ_tot_plot[i] = 1 : ϕ_tot_plot[i] = ϕ_all[i]
+            end
+            heatmap(ϕ_tot_plot, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_3, colorbar = false, size = (800,800))
+            # heatmap(c, title = "time = $(round((timestep*dt), digits = 0))", colorbar = false, size = (800,800))
         end every 500
         gif(anim, "pf_$(N)_cells_w_repulsion_$(repulsion)_attraction_$(α)_degradation_$(σ_c).gif", fps = 15);
     end
 
 end
-
 
 
 
