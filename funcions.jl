@@ -1,14 +1,14 @@
 # ----- CONSTANTS ----- #
 module PhaseFieldConstants
-    export dt, dx, rodx, vol, ϵ, γ, τ, β, σ2, τ_ξ, k, σ_c, α, repulsion
-    export Params, ParamsDiff
+    export dt, dx, rodx, vol, ϵ, γ, τ, β, σ2, τ_ξ, k, σ_c, α, repulsion, D
+    export Params, Diffusion
 
     # Integration constants 
     const dt = 0.001;
     const dx = 0.15;
 
     # Phase Field
-    const rodx = 20;
+    const rodx = 20.0;
     const ro = rodx*dx;
     const vol = π*rodx^2;
 
@@ -22,9 +22,10 @@ module PhaseFieldConstants
     const τ_ξ = 10.0;
 
     # External diffusion
-    const k = 1.0
-    const σ_c = 1.0
-    const α = 1.0
+    k = 1.0
+    σ_c = 1.0
+    α = 0.01
+    D = 0.1
 
     struct Params
         dt::Float64
@@ -39,20 +40,11 @@ module PhaseFieldConstants
         σ2::Float64
     end
 
-    struct ParamsDiff
-        dt::Float64
-        dx::Float64
-        rodx::Float64
-        vol::Float64
-        ϵ::Float64
-        γ::Float64
-        τ::Float64
-        β::Float64
-        τ_ξ::Float64
-        σ2::Float64
+    struct Diffusion
         k::Float64
         σ_c::Float64
         α::Float64
+        D::Float64
     end
 end
 
@@ -102,7 +94,7 @@ module Numerical
 end
 
 module Initialize
-    export generation_phi!, generation_phi_equis!, initialization
+    export generation_phi!, generation_phi_equis!, initialization, initialization_wdiffusion
     # Initial conditions - gives circle 
     function generation_phi!(phi,io,jo)
         for i = 1:nx, j = 1:ny
@@ -150,6 +142,8 @@ module Initialize
     function initialization_wdiffusion(N, nx, ny)
         ξ = randn(nx,ny);
         c = randn(nx,ny);
+        ∇c = zeros(nx,ny;)
+        ∇²c = zeros(nx,ny);
         if N == 1 
             # One cell
             ϕ   = zeros(nx,ny);     # Phase field
@@ -161,7 +155,7 @@ module Initialize
             ∇ϕ  = [zeros(nx,ny) for i in 1:N];
             ∇²ϕ = [zeros(nx,ny) for i in 1:N];
         end
-        return ξ, c, ϕ, ∇ϕ, ∇²ϕ
+        return ξ, c, ∇c, ∇²c, ϕ, ∇ϕ, ∇²ϕ
     end
 end
 
@@ -178,7 +172,7 @@ end
 module PhaseField 
     export PhaseField!
     using Plots, ..Initialize, ..Numerical, ..OtherFunctions
-    using ..PhaseFieldConstants: Params, ParamsDiff
+    using ..PhaseFieldConstants: Params, Diffusion
 
     Mat = Matrix{Float64}
     ArrMat = Vector{Mat}
@@ -245,8 +239,9 @@ module PhaseField
     end
 
     # Function for integration of multiple cells, with external concentration diffusion
-    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, c::Mat, N, params::ParamsDiff, repulsion, stoptime)
-        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2, k, σ_c, α ) = params
+    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, c::Mat, ∇c::Mat, ∇²c::Mat, N, params::Params, diffusion::Diffusion, repulsion, stoptime)
+        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
+        (; k, σ_c, α, D) = diffusion
         nx, ny = size(ϕ[1])
         # Initialization of phase field
         generation_phi_equis!(ϕ, N, rodx, dx, ϵ)
@@ -255,7 +250,7 @@ module PhaseField
         amplitude = sqrt(2*σ2*dt)/dx
         dϕ = [zeros(nx,ny) for i in 1:N]
 
-        anim = @animate for timestep in 1:Int(stoptime/dt)
+        anim = @animate for timestep in 1:Int(round(stoptime/dt))
             # Update values for laplacian and gradient
 
             @. gradient!(ϕ,∇ϕ,dx,nx,ny);
@@ -265,11 +260,9 @@ module PhaseField
             
             # Next step
             ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
-            c += dt*(k*c*∇ϕ_tot - σ_c*c + ∇²c)
+            c += dt*(k*∇ϕ_tot - σ_c*c + D*∇²c)
             for k in 1:N
-                # ∇ϕ_iter = @view ∇ϕ[k]
-                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k])  + α*c*∇c[k]
-                # dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - ma/τ *(ϕ_tot[k]-vol)*∇ϕ_iter + ξ*∇ϕ_iter   - repulsion*∇ϕ_iter*(∇ϕ_tot - ∇ϕ_iter)  
+                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α*c*∇c[k]
 
                 ϕ[k] = ϕ[k] + dt*dϕ[k]
                 ϕ_tot[k] = sum(ϕ[k])
@@ -280,7 +273,7 @@ module PhaseField
             # Plot
             heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_3, colorbar = false, size = (800,800))
         end every 500
-        gif(anim, "pf_$(N)_cells_w_repulsion_$(repulsion).gif", fps = 15);
+        gif(anim, "pf_$(N)_cells_w_repulsion_$(repulsion)_attraction_$(α)_degradation_$(σ_c).gif", fps = 15);
     end
 
 end
