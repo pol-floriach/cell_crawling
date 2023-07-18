@@ -141,17 +141,17 @@ module Initialize
     # Vector initialization with external concentration diffusion
     function initialization_wdiffusion(N, nx, ny)
         ξ = randn(nx,ny);
-        c = zeros(nx,ny);
+        c = rand(nx,ny);
         
-        for j in Int(35):Int(45)
-            for i in 60:70
-                c[i,j] = 1
-            end
-        end
+        # for j in Int(35):Int(45)
+        #     for i in 60:70
+        #         c[i,j] = 1
+        #     end
+        # end
 
         ∇c = zeros(nx,ny;)
         ∇²c = zeros(nx,ny);
-        if N == 0 
+        if N == 1
             # One cell
             ϕ   = zeros(nx,ny);     # Phase field
             ∇ϕ  = zeros(nx,ny);     # Gradient
@@ -178,7 +178,7 @@ end
 # Main functions, used for the simulation
 module PhaseField 
     export PhaseField!
-    using Plots, ..Initialize, ..Numerical, ..OtherFunctions
+    using Plots, ..Initialize, ..Numerical, ..OtherFunctions, ProgressBars
     using ..PhaseFieldConstants: Params, Diffusion
 
     Mat = Matrix{Float64}
@@ -259,7 +259,7 @@ module PhaseField
 
         ϕ_tot_plot = sum(ϕ)
 
-        anim = @animate for timestep in 1:Int(round(stoptime/dt))
+        anim = @animate for timestep in ProgressBar(1:Int(round(stoptime/dt)))
             # Update values for laplacian and gradient
 
             @. gradient!(ϕ,∇ϕ,dx,nx,ny);
@@ -271,7 +271,7 @@ module PhaseField
             ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
             c += dt*(k*∇ϕ_tot - σ_c*c + D*∇²c)
             for k in 1:N
-                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α/τ*c*∇c[k]
+                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α/τ*c*∇c
 
                 ϕ[k] = ϕ[k] + dt*dϕ[k]
                 ϕ_tot[k] = sum(ϕ[k])
@@ -280,10 +280,11 @@ module PhaseField
             ∇ϕ_tot = sum(∇ϕ)
 
             # Plot
-            for i in eachindex(ϕ_tot_plot)
-                ϕ_all[i] > 1 ? ϕ_tot_plot[i] = 1 : ϕ_tot_plot[i] = ϕ_all[i]
-            end
-            heatmap(ϕ_tot_plot, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_3, colorbar = false, size = (800,800))
+            # Passar a 1 si >1 pel plot
+            # for i in eachindex(ϕ_tot_plot)
+            #     ϕ_all[i] > 1 ? ϕ_tot_plot[i] = 1 : ϕ_tot_plot[i] = ϕ_all[i]
+            # end
+            heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800))
             # heatmap(c, title = "time = $(round((timestep*dt), digits = 0))", colorbar = false, size = (800,800))
         end every 500
         gif(anim, "pf_$(N)_cells_w_repulsion_$(repulsion)_attraction_$(α)_degradation_$(σ_c).gif", fps = 15);
