@@ -177,7 +177,7 @@ end
 
 # Main functions, used for the simulation
 module PhaseField 
-    export PhaseField!
+    export PhaseField!, PhaseField2!
     using Plots, ..Initialize, ..Numerical, ..OtherFunctions, ProgressBars
     using ..PhaseFieldConstants: Params, Diffusion
 
@@ -271,10 +271,10 @@ module PhaseField
             ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
             c += dt*(k*∇ϕ_tot - σ_c*c + D*∇²c)
             for k in 1:N
-                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α/τ*c*∇c
+              @fastmath  dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α/τ*∇c
 
-                ϕ[k] = ϕ[k] + dt*dϕ[k]
-                ϕ_tot[k] = sum(ϕ[k])
+              @fastmath  ϕ[k] = ϕ[k] + dt*dϕ[k]
+              @fastmath  ϕ_tot[k] = sum(ϕ[k])
             end
             ϕ_all = sum(ϕ)
             ∇ϕ_tot = sum(∇ϕ)
@@ -287,9 +287,8 @@ module PhaseField
             heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800))
             # heatmap(c, title = "time = $(round((timestep*dt), digits = 0))", colorbar = false, size = (800,800))
         end every 500
-        gif(anim, "pf_$(N)_cells_w_repulsion_$(repulsion)_attraction_$(α)_degradation_$(σ_c).gif", fps = 15);
+        gif(anim, "pf_$(N)_rep_$(repulsion)_k_$(k)_attr_$(α)_deg_$(σ_c)_gen_$(α)_diff_$(D).gif", fps = 15);
     end
-
 end
 
 
