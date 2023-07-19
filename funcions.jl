@@ -271,7 +271,7 @@ module PhaseField
             ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
             c += dt*(k*∇ϕ_tot - σ_c*c + D*∇²c)
             for k in 1:N
-              @fastmath  dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α/τ*∇c
+              @fastmath  dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α/τ*c*∇c
 
               @fastmath  ϕ[k] = ϕ[k] + dt*dϕ[k]
               @fastmath  ϕ_tot[k] = sum(ϕ[k])
@@ -280,10 +280,10 @@ module PhaseField
             ∇ϕ_tot = sum(∇ϕ)
 
             # Plot
-            # Passar a 1 si >1 pel plot
-            # for i in eachindex(ϕ_tot_plot)
-            #     ϕ_all[i] > 1 ? ϕ_tot_plot[i] = 1 : ϕ_tot_plot[i] = ϕ_all[i]
-            # end
+                # Passar a 1 si >1 pel plot
+                # for i in eachindex(ϕ_tot_plot)
+                #     ϕ_all[i] > 1 ? ϕ_tot_plot[i] = 1 : ϕ_tot_plot[i] = ϕ_all[i]
+                # end
             heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800))
             # heatmap(c, title = "time = $(round((timestep*dt), digits = 0))", colorbar = false, size = (800,800))
         end every 500
