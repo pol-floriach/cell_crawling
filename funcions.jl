@@ -53,7 +53,7 @@ module Numerical
     export gradient!, laplacian!
     # Gradient
     function gradient!(c,∇c,dx, nx, ny)
-        for i in 2:nx-1, j in 2:ny-1
+        for j in 2:ny-1, i in 2:nx-1
             ∇c[i,j] = sqrt( (c[i+1,j] - c[i-1,j])^2 +  (c[i,j+1] - c[i,j-1])^2)/(2*dx)
         end
         for j in 2:ny-1
@@ -73,7 +73,7 @@ module Numerical
     end
     # Laplacian with finite differences
     function laplacian!(c,∇²c,dx, nx, ny)
-        for i in 2:nx-1, j in 2:ny-1
+        for j in 2:ny-1, i in 2:nx-1
             ∇²c[i,j] = (c[i+1,j] + c[i-1,j] + c[i,j+1] + c[i,j-1] - 4*c[i,j]) / dx^2
         end
         for j in 2:ny-1
@@ -94,16 +94,16 @@ module Numerical
 end
 
 module Initialize
-    export generation_phi!, generation_phi_equis!, initialization, initialization_wdiffusion
+    export gen_phi!, gen_phi_equis!, init, initwdiff
     # Initial conditions - gives circle 
-    function generation_phi!(phi,io,jo)
-        for i = 1:nx, j = 1:ny
+    function gen_phi!(phi,io,jo)
+        for j = 1:ny, i = 1:nx
             r = dx*sqrt((i-io)^2+(j-jo)^2) ;
             phi[i,j] = 0.5+0.5*tanh((ro-r)/(dx*ϵ));
         end
     end
     # Initial conditions - gives N equispaced circles 
-    function generation_phi_equis!(ϕ,N,rodx,dx,ϵ)
+    function gen_phi_equis!(ϕ,N,rodx,dx,ϵ)
         ro = rodx * dx
         nx, ny = size(ϕ[1])
         io = jo = rodx + 1
@@ -113,7 +113,7 @@ module Initialize
                 io = rodx+2
                 for kx in 1:Int(sqrt(N))
                     k += 1; 
-                    for i = 1:nx, j = 1:ny
+                    for j = 1:ny,  i = 1:nx
                         r = dx*sqrt((i-io)^2+(j-jo)^2) ;
                         ϕ[k][i,j] = 0.5+0.5*tanh((ro-r)/(dx*ϵ));
                     end
@@ -123,7 +123,7 @@ module Initialize
         end
     end
     # Vector initialization
-    function initialization(N, nx, ny)
+    function init(N, nx, ny)
         ξ = randn(nx,ny);
         if N == 1 
             # One cell
@@ -139,16 +139,9 @@ module Initialize
         return ξ, ϕ, ∇ϕ, ∇²ϕ
     end
     # Vector initialization with external concentration diffusion
-    function initialization_wdiffusion(N, nx, ny)
+    function initwdiff(N, nx, ny)
         ξ = randn(nx,ny);
         c = rand(nx,ny);
-        
-        # for j in Int(35):Int(45)
-        #     for i in 60:70
-        #         c[i,j] = 1
-        #     end
-        # end
-
         ∇c = zeros(nx,ny;)
         ∇²c = zeros(nx,ny);
         if N == 1
@@ -177,7 +170,7 @@ end
 
 # Main functions, used for the simulation
 module PhaseField 
-    export PhaseField!, PhaseField2!
+    export phasefield!
     using Plots, ..Initialize, ..Numerical, ..OtherFunctions, ProgressBars
     using ..PhaseFieldConstants: Params, Diffusion
 
@@ -185,12 +178,12 @@ module PhaseField
     ArrMat = Vector{Mat}
 
     # Function for integration for a single cell
-    function PhaseField!(ϕ::Mat, ∇ϕ::Mat, ∇²ϕ::Mat, ξ::Mat, params::Params, stoptime)
+    function phasefield!(ϕ::Mat, ∇ϕ::Mat, ∇²ϕ::Mat, ξ::Mat, params::Params, stoptime)
         # dt, dx, stoptime, rodx, ro,  vol, α, ϵ, γ, τ, β, repulsion, τ_ξ, σ2 = params
         (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
 
         # Initialization of phase field
-        generation_phi!(ϕ,30,50)
+        gen_phi!(ϕ,30,50)
         ϕ_tot = vol
         amplitude = sqrt(2*σ2*dt)/dx
 
@@ -209,7 +202,7 @@ module PhaseField
         end every 500
     end
     # Function for integration for multiple cells
-    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, params::Params, repulsion, stoptime)
+    function phasefield!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, params::Params, repulsion, stoptime)
         (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
         nx, ny = size(ϕ[1])
         # Initialization of phase field
@@ -246,12 +239,12 @@ module PhaseField
     end
 
     # Function for integration of multiple cells, with external concentration diffusion
-    function PhaseField!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, c::Mat, ∇c::Mat, ∇²c::Mat, N, params::Params, diffusion::Diffusion, repulsion, stoptime)
+    function phasefield!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, c::Mat, ∇c::Mat, ∇²c::Mat, N, params::Params, diffusion::Diffusion, repulsion, stoptime)
         (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
         (; k, σ_c, α, D) = diffusion
         nx, ny = size(ϕ[1])
         # Initialization of phase field
-        generation_phi_equis!(ϕ, N, rodx, dx, ϵ)
+        gen_phi_equis!(ϕ, N, rodx, dx, ϵ)
         ϕ_tot = vol*ones(N)
         ∇ϕ_tot = sum(∇ϕ)
         amplitude = sqrt(2*σ2*dt)/dx
@@ -264,14 +257,14 @@ module PhaseField
 
             @. gradient!(ϕ,∇ϕ,dx,nx,ny);
             @. laplacian!(ϕ,∇²ϕ,dx,nx,ny); 
-            gradient!(c,∇c,dx,nx,ny);
+            # gradient!(c,∇c,dx,nx,ny);
             laplacian!(c,∇²c,dx,nx,ny);
             
             # Next step
             ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
             c += dt*(k*∇ϕ_tot - σ_c*c + D*∇²c)
             for k in 1:N
-              @fastmath  dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α/τ*c*∇c
+              @fastmath  dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α/τ*c*∇ϕ_tot
 
               @fastmath  ϕ[k] = ϕ[k] + dt*dϕ[k]
               @fastmath  ϕ_tot[k] = sum(ϕ[k])
