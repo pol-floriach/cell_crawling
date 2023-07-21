@@ -8,11 +8,11 @@ module PhaseFieldConstants
     const dx = 0.15;
 
     # Phase Field
-    const rodx = 20.0;
+    rodx = 15.0
     const ro = rodx*dx;
     const vol = π*rodx^2;
 
-    const ϵ = 0.750;
+    const ϵ = 0.750; # 0.750
     const γ = 2.0;
     const τ = 2.0;
     const β = 0.50;
@@ -53,42 +53,42 @@ module Numerical
     export gradient!, laplacian!
     # Gradient
     function gradient!(c,∇c,dx, nx, ny)
-        for j in 2:ny-1, i in 2:nx-1
+        @fastmath @inbounds for j in 2:ny-1, i in 2:nx-1
             ∇c[i,j] = sqrt( (c[i+1,j] - c[i-1,j])^2 +  (c[i,j+1] - c[i,j-1])^2)/(2*dx)
         end
-        for j in 2:ny-1
+        @fastmath @inbounds for j in 2:ny-1
             ∇c[1, j]  = sqrt((c[2, j] - c[nx, j])^2 + (c[1, j+1] - c[1, j-1])^2) / (2*dx)
             ∇c[nx, j] = sqrt((c[1, j] - c[nx-1, j])^2 + (c[nx, j+1] - c[nx, j-1])^2) / (2*dx)
         end
-        for i in 2:nx-1
+        @fastmath @inbounds for i in 2:nx-1
             ∇c[i, 1] = sqrt((c[i+1, 1] - c[i-1, 1])^2 + (c[i, 2] - c[i, ny])^2) / (2*dx)
             ∇c[i, ny] = sqrt((c[i+1, ny] - c[i-1, ny])^2 + (c[i, 1] - c[i, ny-1])^2) / (2*dx)
         end
         # Compute ∇c for the four corner cells using periodic conditions
-        ∇c[1, 1] = sqrt((c[2, 1] - c[nx, 1])^2 + (c[1, 2] - c[1, ny])^2) / (2*dx)
-        ∇c[1, ny] = sqrt((c[2, ny] - c[nx, ny])^2 + (c[1, 1] - c[1, ny-1])^2) / (2*dx)
-        ∇c[nx, 1] = sqrt((c[1, 1] - c[nx-1, 1])^2 + (c[nx, 2] - c[nx, ny])^2) / (2*dx)
-        ∇c[nx, ny] = sqrt((c[1, ny] - c[nx-1, ny])^2 + (c[nx, 1] - c[nx, ny-1])^2) / (2*dx)
+        @fastmath @inbounds ∇c[1, 1] = sqrt((c[2, 1] - c[nx, 1])^2 + (c[1, 2] - c[1, ny])^2) / (2*dx)
+        @fastmath @inbounds ∇c[1, ny] = sqrt((c[2, ny] - c[nx, ny])^2 + (c[1, 1] - c[1, ny-1])^2) / (2*dx)
+        @fastmath @inbounds ∇c[nx, 1] = sqrt((c[1, 1] - c[nx-1, 1])^2 + (c[nx, 2] - c[nx, ny])^2) / (2*dx)
+        @fastmath @inbounds ∇c[nx, ny] = sqrt((c[1, ny] - c[nx-1, ny])^2 + (c[nx, 1] - c[nx, ny-1])^2) / (2*dx)
         nothing
     end
     # Laplacian with finite differences
     function laplacian!(c,∇²c,dx, nx, ny)
-        for j in 2:ny-1, i in 2:nx-1
+        @fastmath @inbounds for j in 2:ny-1, i in 2:nx-1
             ∇²c[i,j] = (c[i+1,j] + c[i-1,j] + c[i,j+1] + c[i,j-1] - 4*c[i,j]) / dx^2
         end
-        for j in 2:ny-1
+        @fastmath @inbounds for j in 2:ny-1
             ∇²c[1, j] = (c[2, j] + c[nx, j] + c[1, j+1] + c[1, j-1] - 4*c[1, j]) / dx^2
             ∇²c[nx, j] = (c[1, j] + c[nx-1, j] + c[nx, j+1] + c[nx, j-1] - 4*c[nx, j]) / dx^2
         end
-        for i in 2:nx-1
+        @fastmath @inbounds for i in 2:nx-1
             ∇²c[i, 1] = (c[i+1, 1] + c[i-1, 1] + c[i, 2] + c[i, ny] - 4*c[i, 1]) / dx^2
             ∇²c[i, ny] = (c[i+1, ny] + c[i-1, ny] + c[i, 1] + c[i, ny-1] - 4*c[i, ny]) / dx^2
         end
 
-        ∇²c[1, 1] = (c[2, 1] + c[nx, 1] + c[1, 2] + c[1, ny] - 4*c[1, 1]) / dx^2
-        ∇²c[1, ny] = (c[2, ny] + c[nx, ny] + c[1, 1] + c[1, ny-1] - 4*c[1, ny]) / dx^2
-        ∇²c[nx, 1] = (c[1, 1] + c[nx-1, 1] + c[nx, 2] + c[nx, ny] - 4*c[nx, 1]) / dx^2
-        ∇²c[nx, ny] = (c[1, ny] + c[nx-1, ny] + c[nx, 1] + c[nx, ny-1] - 4*c[nx, ny]) / dx^2
+        @fastmath @inbounds ∇²c[1, 1] = (c[2, 1] + c[nx, 1] + c[1, 2] + c[1, ny] - 4*c[1, 1]) / dx^2
+        @fastmath @inbounds ∇²c[1, ny] = (c[2, ny] + c[nx, ny] + c[1, 1] + c[1, ny-1] - 4*c[1, ny]) / dx^2
+        @fastmath @inbounds ∇²c[nx, 1] = (c[1, 1] + c[nx-1, 1] + c[nx, 2] + c[nx, ny] - 4*c[nx, 1]) / dx^2
+        @fastmath @inbounds ∇²c[nx, ny] = (c[1, ny] + c[nx-1, ny] + c[nx, 1] + c[nx, ny-1] - 4*c[nx, ny]) / dx^2
         nothing
     end
 end
@@ -110,7 +110,7 @@ module Initialize
         ro2 = 2*rodx
         k = 0
         for ky in 1:Int(sqrt(N))
-                io = rodx+2
+                io = rodx+1
                 for kx in 1:Int(sqrt(N))
                     k += 1; 
                     for j = 1:ny,  i = 1:nx
@@ -171,8 +171,8 @@ end
 # Main functions, used for the simulation
 module PhaseField 
     export phasefield!
-    using Plots, ..Initialize, ..Numerical, ..OtherFunctions, ProgressBars
-    using ..PhaseFieldConstants: Params, Diffusion
+    using Plots,ProgressBars, ..PhaseFieldConstants, ..Initialize, ..Numerical, ..OtherFunctions 
+    # using ..PhaseFieldConstants: Params, Diffusion
 
     Mat = Matrix{Float64}
     ArrMat = Vector{Mat}
@@ -249,8 +249,8 @@ module PhaseField
         ∇ϕ_tot = sum(∇ϕ)
         amplitude = sqrt(2*σ2*dt)/dx
         dϕ = [zeros(nx,ny) for i in 1:N]
-
-        ϕ_tot_plot = sum(ϕ)
+        ∇ϕ_k = zeros(nx,ny)
+        # ϕ_tot_plot = sum(ϕ)
 
         anim = @animate for timestep in ProgressBar(1:Int(round(stoptime/dt)))
             # Update values for laplacian and gradient
@@ -263,11 +263,13 @@ module PhaseField
             # Next step
             ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
             c += dt*(k*∇ϕ_tot - σ_c*c + D*∇²c)
-            for k in 1:N
-              @fastmath  dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α/τ*c*∇ϕ_tot
+            @fastmath @inbounds for k in 1:N
+                ∇ϕ_k = ∇ϕ[k]
+                # dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α/τ*c*∇ϕ[k] #c*∇c  
+                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ_k + ξ*∇ϕ_k   - repulsion*∇ϕ_k*(∇ϕ_tot - ∇ϕ_k) + α/τ*c*∇ϕ_k #c*∇c  
 
-              @fastmath  ϕ[k] = ϕ[k] + dt*dϕ[k]
-              @fastmath  ϕ_tot[k] = sum(ϕ[k])
+                ϕ[k] = ϕ[k] + dt*dϕ[k]
+                ϕ_tot[k] = sum(ϕ[k])
             end
             ϕ_all = sum(ϕ)
             ∇ϕ_tot = sum(∇ϕ)
