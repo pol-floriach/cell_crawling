@@ -94,7 +94,7 @@ module Numerical
 end
 
 module Initialize
-    export gen_phi!, gen_phi_equis!, init, initwdiff
+    export gen_phi!, gen_phi_equis!, gen_phi_equis_2groups!, init, initwdiff
     # Initial conditions - gives circle 
     function gen_phi!(phi,io,jo)
         for j = 1:ny, i = 1:nx
@@ -122,6 +122,39 @@ module Initialize
             jo += ro2 + 1
         end
     end
+    #Generation of phase field, 2 groups of N cells
+    function gen_phi_equis_2groups!(ϕ,N,rodx,dx,ϵ)
+        ro = rodx * dx
+        nx, ny = size(ϕ[1])
+        io1 = jo1 = rodx + 10
+        io2 = copy(io1)
+        jo2 = jo1 + Int(round(ny/2 + 25))
+    
+        ro2 = 2*rodx
+        # Group 1 
+        k = 0
+        for ky in 1:Int(sqrt(N/2))
+                io1 = rodx+10
+                io2 = rodx+10
+                for kx in 1:Int(sqrt(N/2))
+                    k += 1; 
+                    for j = 1:Int(ny/2),  i = 1:nx
+                        r = dx*sqrt((i-io1)^2+(j-jo1)^2) ;
+                        ϕ[k][i,j] = 0.5+0.5*tanh((ro-r)/(dx*ϵ));
+                    end
+                    k+=1
+                    for j = Int(ny/2+1):ny,  i = 1:nx
+                        r = dx*sqrt((i-io2)^2+(j-jo2)^2) ;
+                        ϕ[k][i,j] = 0.5+0.5*tanh((ro-r)/(dx*ϵ));
+                    end
+                io1 += ro2 + 1
+                io2 += ro2 + 1
+                end
+            jo1 += ro2 + 1
+            jo2 += ro2 + 1
+        end
+    end
+
     # Vector initialization
     function init(N, nx, ny)
         ξ = randn(nx,ny);
@@ -172,7 +205,6 @@ end
 module PhaseField 
     export phasefield!
     using Plots,ProgressBars, ..PhaseFieldConstants, ..Initialize, ..Numerical, ..OtherFunctions 
-    # using ..PhaseFieldConstants: Params, Diffusion
 
     Mat = Matrix{Float64}
     ArrMat = Vector{Mat}
@@ -207,8 +239,8 @@ module PhaseField
         nx, ny = size(ϕ[1])
         # Initialization of phase field
         # generation_phi!(ϕ[1],20,20) ; generation_phi!(ϕ[2],80,80)
-        generation_phi_equis!(ϕ, N, rodx, dx, ϵ)
-
+        #generation_phi_equis!(ϕ, N, rodx, dx, ϵ)
+        generation_phi_equis_2groups!(ϕ, N, rodx, dx, ϵ)
         ϕ_tot = vol*ones(N)
         ∇ϕ_tot = sum(∇ϕ)
         amplitude = sqrt(2*σ2*dt)/dx
@@ -244,7 +276,7 @@ module PhaseField
         (; k, σ_c, α, D) = diffusion
         nx, ny = size(ϕ[1])
         # Initialization of phase field
-        gen_phi_equis!(ϕ, N, rodx, dx, ϵ)
+        gen_phi_equis_2groups!(ϕ, N, rodx, dx, ϵ)
         ϕ_tot = vol*ones(N)
         ∇ϕ_tot = sum(∇ϕ)
         amplitude = sqrt(2*σ2*dt)/dx
@@ -265,7 +297,6 @@ module PhaseField
             c += dt*(k*∇ϕ_tot - σ_c*c + D*∇²c)
             @fastmath @inbounds for k in 1:N
                 ∇ϕ_k = ∇ϕ[k]
-                # dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ[k] + ξ*∇ϕ[k]   - repulsion*∇ϕ[k]*(∇ϕ_tot - ∇ϕ[k]) + α/τ*c*∇ϕ[k] #c*∇c  
                 dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ_k + ξ*∇ϕ_k   - repulsion*∇ϕ_k*(∇ϕ_tot - ∇ϕ_k) + α/τ*c*∇ϕ_k #c*∇c  
 
                 ϕ[k] = ϕ[k] + dt*dϕ[k]
@@ -279,10 +310,10 @@ module PhaseField
                 # for i in eachindex(ϕ_tot_plot)
                 #     ϕ_all[i] > 1 ? ϕ_tot_plot[i] = 1 : ϕ_tot_plot[i] = ϕ_all[i]
                 # end
-            heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800))
+            heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (1391,400))
             # heatmap(c, title = "time = $(round((timestep*dt), digits = 0))", colorbar = false, size = (800,800))
-        end every 500
-        gif(anim, "pf_$(N)_rep_$(repulsion)_k_$(k)_attr_$(α)_deg_$(σ_c)_gen_$(α)_diff_$(D).gif", fps = 15);
+        end every 1000
+        gif(anim, "pf_2groups_$(N)_rep_$(repulsion)_k_$(k)_attr_$(α)_deg_$(σ_c)_gen_$(α)_diff_$(D).gif", fps = 15);
     end
 end
 
