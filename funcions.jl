@@ -128,7 +128,7 @@ module Initialize
         nx, ny = size(ϕ[1])
         io1 = jo1 = rodx + 10
         io2 = copy(io1)
-        jo2 = jo1 + Int(round(ny/2 + 25))
+        jo2 = jo1 + Int(round(ny/2 + 5))
     
         ro2 = 2*rodx
         # Group 1 
@@ -239,8 +239,7 @@ module PhaseField
         nx, ny = size(ϕ[1])
         # Initialization of phase field
         # generation_phi!(ϕ[1],20,20) ; generation_phi!(ϕ[2],80,80)
-        #generation_phi_equis!(ϕ, N, rodx, dx, ϵ)
-        generation_phi_equis_2groups!(ϕ, N, rodx, dx, ϵ)
+        gen_phi_equis!(ϕ, N, rodx, dx, ϵ)
         ϕ_tot = vol*ones(N)
         ∇ϕ_tot = sum(∇ϕ)
         amplitude = sqrt(2*σ2*dt)/dx
@@ -310,9 +309,9 @@ module PhaseField
                 # for i in eachindex(ϕ_tot_plot)
                 #     ϕ_all[i] > 1 ? ϕ_tot_plot[i] = 1 : ϕ_tot_plot[i] = ϕ_all[i]
                 # end
-            heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (1391,400))
+            heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (1273,400))
             # heatmap(c, title = "time = $(round((timestep*dt), digits = 0))", colorbar = false, size = (800,800))
-        end every 1000
+        end every 2500
         gif(anim, "pf_2groups_$(N)_rep_$(repulsion)_k_$(k)_attr_$(α)_deg_$(σ_c)_gen_$(α)_diff_$(D).gif", fps = 15);
     end
 end

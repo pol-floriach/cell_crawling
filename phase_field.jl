@@ -4,9 +4,9 @@ using Plots, .PhaseFieldConstants, .Numerical, .Initialize, .OtherFunctions, .Ph
 
 # Mutable simulation parameters
 N = 18;
-nx = 115;
-ny = 400
-stoptime = 200.0;
+nx = 110;
+ny = 230
+stoptime = 500.0;
 repulsion = 2.3;
 
 params = Params(dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2);
