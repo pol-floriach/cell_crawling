@@ -5,7 +5,7 @@ using Plots, .PhaseFieldConstants, .Numerical, .Initialize, .OtherFunctions, .Ph
 # Mutable simulation parameters
 N = 18;
 nx = 110;
-ny = 230
+ny = 350
 stoptime = 500.0;
 repulsion = 2.3;
 
