@@ -3,10 +3,9 @@ include("/home/pol/cell_crawling/funcions.jl")
 using Plots, .PhaseFieldConstants, .Numerical, .Initialize, .OtherFunctions, .PhaseField, ProgressBars
 
 # Mutable simulation parameters
-N = 18;
-nx = 110;
-ny = 350
-stoptime = 500.0;
+N = 4;
+nx = ny = 55
+stoptime = 400.0;
 repulsion = 2.3;
 
 params = Params(dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2);
@@ -20,5 +19,8 @@ diffusion = Diffusion(k,σ_c,α,D);
 
 ξ, c, ∇c, ∇²c, ϕ, ∇ϕ, ∇²ϕ  = initwdiff(N, nx,ny);
 
-@time phasefield!(ϕ, ∇ϕ, ∇²ϕ, ξ, c, ∇c, ∇²c, N, params, diffusion, repulsion, stoptime) 
+A = 1.5;
+B = 2.3
+attr_rep = AttRep(A,B)
+@time phasefield2!(ϕ, ∇ϕ, ∇²ϕ, ξ, N, params, attr_rep, stoptime) 
 
