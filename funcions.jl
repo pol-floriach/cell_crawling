@@ -1,14 +1,14 @@
 # Constants and struct definitions for organizing
 module PhaseFieldConstants
     export dt, dx, rodx, vol, ϵ, γ, τ, β, σ2, τ_ξ, k, σ_c, α, repulsion, D
-    export Params, Diffusion, AttRep
+    export Params, Diffusion, RepField
 
     # Integration constants 
     const dt = 0.001;
     const dx = 0.15;
 
     # Phase Field
-    rodx = 10.0
+    rodx = 9.0
     const ro = rodx*dx;
     const vol = π*rodx^2;
 
@@ -47,7 +47,7 @@ module PhaseFieldConstants
         D::Float64
     end
 
-    struct AttRep
+    struct RepField
         A::Float64
         B::Float64
     end
@@ -316,19 +316,21 @@ module PhaseField
         gif(anim, "pf_2groups_$(N)_rep_$(repulsion)_k_$(k)_attr_$(α)_deg_$(σ_c)_gen_$(α)_diff_$(D).gif", fps = 15);
     end
 # Function for integration of multiple cells with quadratic attraction/repulsion potential
-    function phasefield2!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, params::Params, attr_rep::AttRep, stoptime)
+    function phasefield2!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, params::Params, rep::RepField, stoptime)
         (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
+        (; A, B) = rep
         nx, ny = size(ϕ[1])
-        (; A, B) = attr_rep
         # Initialization of phase field
-        # generation_phi!(ϕ[1],20,20) ; generation_phi!(ϕ[2],80,80)
         gen_phi_equis!(ϕ, N, rodx, dx, ϵ)
         ϕ_tot = vol*ones(N)
         ∇ϕ_tot = sum(∇ϕ)
+        ϕ_all = sum(ϕ)
         amplitude = sqrt(2*σ2*dt)/dx
         dϕ = [zeros(nx,ny) for i in 1:N]
 
-        anim = @animate for timestep in ProgressBar(1:Int(round(stoptime/dt)))
+        anim = @animate for timestep in 1:Int(round(stoptime/dt))
+        # anim = @animate for timestep in ProgressBar(1:Int(round(stoptime/dt)))
+
             # Update values for laplacian and gradient
             @. laplacian!(ϕ,∇²ϕ,dx, nx, ny); 
             @. gradient!(ϕ,∇ϕ,dx, nx, ny);
@@ -337,8 +339,9 @@ module PhaseField
             ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
             
             for k in 1:N
-                ∇ϕ_k = ∇ϕ[k]
-                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕ[k])/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕ_k + ξ*∇ϕ_k  + A*∇ϕ_k*(∇ϕ_tot-∇ϕ_k) - B*(∇ϕ_k*(∇ϕ_tot-∇ϕ_k))^2
+                ∇ϕₖ = ∇ϕ[k]
+                ϕₖ = ϕ[k]
+                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕₖ)/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕₖ + ξ*∇ϕₖ + A*(-ϕₖ*(ϕ_all-ϕₖ) + B*ϕₖ^2*(ϕ_all-ϕₖ)^2)
                 ϕ[k] = ϕ[k] + dt*dϕ[k]
                 ϕ_tot[k] = sum(ϕ[k])
             end
@@ -346,59 +349,11 @@ module PhaseField
             ∇ϕ_tot = sum(∇ϕ)
             # Plot
             heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800))
-        end every 500
-        gif(anim, "pf_$(N)_cells_w_repulsion_$(repulsion).gif", fps = 15);
+        end every 1000
+        gif(anim, "/home/pol/cell_crawling/figs/home/pol/cell_crawling/figs/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
+
     end
 
 
 end
 
-
-
- # Other functions not used now 
-#= 
-    # Function for integration, with a loop
-    function PhaseFieldLoop!(ϕ, ∇ϕ, ∇²ϕ, params)
-        nx, ny, dt, dx, stoptime, rodx, ro, threshold, vol, α, ϵ, γ, τ, ma, mb = params
-        generation_index!()
-        generation_phi!(ϕ,30,50)
-        ϕ_tot = vol
-        sqrtΔt = sqrt(dt)
-        # Initialization of phase field
-        actualtime = 0.0
-        plt = plot()
-        for timestep in 1:Int(stoptime/dt)
-            actualtime = round(actualtime+dt,digits=1)
-            # Update values for laplacian and gradient
-            laplacian!(ϕ,∇²ϕ,dx); 
-            gradient!(ϕ,∇ϕ,dx) 
-
-            for i in 1:nx, j in 1:ny
-                dϕ = γ/τ * (∇²ϕ[i,j] + Gd(ϕ[i,j])/(ϵ^2)) - ma/τ * (ϕ_tot-vol) * ∇ϕ[i,j] + randn()*sqrtΔt*∇ϕ[i,j]      
-                ϕ[i,j] = ϕ[i,j] + dt*dϕ
-                # if ϕ[i,j] < 0.0 
-                #     ϕ[i,j] = 0.0
-                # elseif ϕ[i,j] > 1.0 
-                #     ϕ[i,j] = 1.0
-                # end
-            end
-            ϕ_tot = sum(ϕ)
-            #if timestep % 500 == 0
-            #   heatmap(ϕ, title = "time = $actualtime", colormap = :Accent_4);
-            #   savefig(p1,"fig_$time.png")
-            #end
-        end #every 500
-    end
-    # For boundary conditions
-    function generation_index!()
-        for i in 1:nx-1
-            ixyp1[i] = i+1
-        end
-        ixyp1[nx] = 1
-        for i in 2:nx
-            ixym1[i] = i-1
-        end
-        ixym1[1] = nx-1
-        nothing
-    end
-=#
