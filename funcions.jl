@@ -325,7 +325,7 @@ module PhaseField
         ϕ_tot = vol*ones(N)
         ∇ϕ_tot = sum(∇ϕ)
         ϕ_all = sum(ϕ)
-        amplitude = sqrt(2*σ2*dt)/dx
+        amplitude = sqrt(2*σ2*dt)/dx* 0.4
         dϕ = [zeros(nx,ny) for i in 1:N]
 
         anim = @animate for timestep in 1:Int(round(stoptime/dt))
@@ -350,7 +350,46 @@ module PhaseField
             # Plot
             heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800))
         end every 1000
-        gif(anim, "/home/pol/cell_crawling/figs/home/pol/cell_crawling/figs/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
+        gif(anim, "/home/pol/figs2/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
+
+    end
+
+     # Function with rigged force, with bigger attraction well 
+    function phasefield3!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, params::Params, rep::RepField, stoptime)
+        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
+        (; A, B) = rep
+        nx, ny = size(ϕ[1])
+        # Initialization of phase field
+        gen_phi_equis!(ϕ, N, rodx, dx, ϵ)
+        ϕ_tot = vol*ones(N)
+        ∇ϕ_tot = sum(∇ϕ)
+        ϕ_all = sum(ϕ)
+        amplitude = sqrt(2*σ2*dt)/dx* 0.4
+        dϕ = [zeros(nx,ny) for i in 1:N]
+
+        anim = @animate for timestep in 1:Int(round(stoptime/dt))
+        # anim = @animate for timestep in ProgressBar(1:Int(round(stoptime/dt)))
+
+            # Update values for laplacian and gradient
+            @. laplacian!(ϕ,∇²ϕ,dx, nx, ny); 
+            @. gradient!(ϕ,∇ϕ,dx, nx, ny);
+
+            # Next step
+            ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
+            
+            for k in 1:N
+                ∇ϕₖ = ∇ϕ[k]
+                ϕₖ = ϕ[k]
+                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕₖ)/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕₖ + ξ*∇ϕₖ + A*(-ϕₖ*(ϕ_all-ϕₖ) + B*ϕₖ^2*(ϕ_all-ϕₖ)^2)
+                ϕ[k] = ϕ[k] + dt*dϕ[k]
+                ϕ_tot[k] = sum(ϕ[k])
+            end
+            ϕ_all = sum(ϕ)
+            ∇ϕ_tot = sum(∇ϕ)
+            # Plot
+            heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800))
+        end every 1000
+        gif(anim, "/home/pol/figs2/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
 
     end
 

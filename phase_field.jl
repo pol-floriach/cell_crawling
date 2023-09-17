@@ -23,20 +23,12 @@ diffusion = Diffusion(k,σ_c,α,D);
 ξ, ϕ, ∇ϕ, ∇²ϕ  = init(N, nx,ny);
 
 rang_integracio = parse(Int,ARGS[1])
-
-if rang_integracio == 1 
-    A_range = 0.5:0.5:2
-elseif rang_integracio == 2
-    A_range = 2.5:0.5:4
-elseif rang_integracio == 3
-    A_range = 4.5:0.5:6
-elseif rang_integracio == 4
-    A_range = 6.5:0.5:8
-elseif rang_integracio == 5
-    A_range = 8.5:0.5:10
+for i in 0:9
+    if rang_integracio == i 
+        global A_range = i+0.5:0.5:i+1
+    end
 end
-
-println(A_range)
+println(rang_integracio); println(typeof(rang_integracio))
 # # for A in 0.5:0.5:10, B in 0.5:0.5:5 
 for A in A_range, B in 0.5:0.5:5
     rep = RepField(A, B)
