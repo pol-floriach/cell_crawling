@@ -386,18 +386,18 @@ module PhaseField
                 # Attraction / repulsion force bc of other cells
 
                 F_tot = 0.0
-                if l == k
                     for l in 1:N
-                        for m in 1:nx, n in 1:nx
-                            ϕₗ = ϕ[l]
-                            cond = ϕₖ[m,n]*ϕₗ[m,n]
-                            if cond < 0.05
-                                F_l = 0.0
-                            elseif cond >= 0.25
-                                F_l = -A*cond
-                            else 
-                                F_l = B
-                            end
+                	if l == k
+                            for m in 1:nx, n in 1:nx
+                                ϕₗ = ϕ[l]
+                                cond = ϕₖ[m,n]*ϕₗ[m,n]
+                                if cond < 0.05
+                                    F_l = 0.0
+                                elseif cond >= 0.25
+                                    F_l = -A*cond
+                                else 
+                                    F_l = B
+                                end
                             F_tot += F_l
                         end
                     end
@@ -412,11 +412,11 @@ module PhaseField
 
             # Stop if NaN
             any(isnan,ϕ_all) ? break : nothing
-            
+
             # Plot
             heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800))
         end every 1000
-        gif(anim, "/home/pol/figs_rigged/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
+        gif(anim, "/home/pol/figs_rigged/pf_$(N)_A_$(A)_B_$(B).gif", fps = 30);
     end
 end
 
