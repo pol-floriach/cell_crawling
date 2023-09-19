@@ -1,0 +1,594 @@
+
+[1494222] signal (15): Terminated
+in expression starting at /home/pol/cell_crawling/phase_field.jl:34
+jl_f_getfield at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/builtins.c:941
+getproperty at ./Base.jl:37
+iterate at ./set.jl:124 [inlined]
+_update_axis at /home/pol/.julia/packages/Plots/sxUvK/src/args.jl:1895
+_update_axis at /home/pol/.julia/packages/Plots/sxUvK/src/args.jl:1862
+_update_subplot_args at /home/pol/.julia/packages/Plots/sxUvK/src/args.jl:1949
+jfptr__update_subplot_args_12520 at /home/pol/.julia/compiled/v1.9/Plots/ld3vC_IHlOI.so (unknown line)
+_jl_invoke at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2758 [inlined]
+ijl_apply_generic at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2940
+_subplot_setup at /home/pol/.julia/packages/Plots/sxUvK/src/pipeline.jl:294
+plot_setup! at /home/pol/.julia/packages/Plots/sxUvK/src/pipeline.jl:149
+_jl_invoke at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2758 [inlined]
+ijl_apply_generic at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2940
+recipe_pipeline! at /home/pol/.julia/packages/RecipesPipeline/BGM3l/src/RecipesPipeline.jl:89
+_plot! at /home/pol/.julia/packages/Plots/sxUvK/src/plot.jl:223
+#plot#188 at /home/pol/.julia/packages/Plots/sxUvK/src/plot.jl:102 [inlined]
+plot at /home/pol/.julia/packages/Plots/sxUvK/src/plot.jl:93 [inlined]
+#heatmap#381 at /home/pol/.julia/packages/RecipesBase/BRe07/src/RecipesBase.jl:427 [inlined]
+heatmap at /home/pol/.julia/packages/RecipesBase/BRe07/src/RecipesBase.jl:427 [inlined]
+macro expansion at /home/pol/cell_crawling/funcions.jl:351 [inlined]
+macro expansion at /home/pol/.julia/packages/Plots/sxUvK/src/animation.jl:251 [inlined]
+phasefield2! at /home/pol/cell_crawling/funcions.jl:331
+unknown function (ip: 0x7ffa54ab8867)
+_jl_invoke at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2758 [inlined]
+ijl_apply_generic at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2940
+macro expansion at ./timing.jl:273 [inlined]
+top-level scope at /home/pol/cell_crawling/phase_field.jl:36
+jl_toplevel_eval_flex at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/toplevel.c:903
+jl_toplevel_eval_flex at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/toplevel.c:856
+ijl_toplevel_eval_in at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/toplevel.c:971
+eval at ./boot.jl:370 [inlined]
+include_string at ./loading.jl:1903
+_jl_invoke at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2758 [inlined]
+ijl_apply_generic at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2940
+_include at ./loading.jl:1963
+include at ./Base.jl:457
+jfptr_include_32440.clone_1 at /home/pol/julia-1.9.2/lib/julia/sys.so (unknown line)
+_jl_invoke at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2758 [inlined]
+ijl_apply_generic at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2940
+exec_options at ./client.jl:307
+_start at ./client.jl:522
+jfptr__start_43375.clone_1 at /home/pol/julia-1.9.2/lib/julia/sys.so (unknown line)
+_jl_invoke at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2758 [inlined]
+ijl_apply_generic at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2940
+jl_apply at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/julia.h:1879 [inlined]
+true_main at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/jlapi.c:573
+jl_repl_entrypoint at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/jlapi.c:717
+main at julia (unknown line)
+__libc_start_main at /lib/x86_64-linux-gnu/libc.so.6 (unknown line)
+unknown function (ip: 0x401098)
+unknown function (ip: (nil))
+Allocations: 478687906 (Pool: 478396866; Big: 291040); GC: 2272
+2.25:0.25:3.0
+
+[1494206] signal (15): Terminated
+in expression starting at /home/pol/cell_crawling/phase_field.jl:34
+ijl_get_nth_field at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/datatype.c:1555
+ijl_get_nth_field_checked at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/datatype.c:1568
+jl_f_getfield at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/builtins.c:937
+getproperty at ./Base.jl:37
+iterate at ./dict.jl:700 [inlined]
+iterate at ./set.jl:124 [inlined]
+preprocess_attributes! at /home/pol/.julia/packages/Plots/sxUvK/src/args.jl:1423
+#plot#188 at /home/pol/.julia/packages/Plots/sxUvK/src/plot.jl:97 [inlined]
+plot at /home/pol/.julia/packages/Plots/sxUvK/src/plot.jl:93 [inlined]
+#heatmap#381 at /home/pol/.julia/packages/RecipesBase/BRe07/src/RecipesBase.jl:427 [inlined]
+heatmap at /home/pol/.julia/packages/RecipesBase/BRe07/src/RecipesBase.jl:427 [inlined]
+macro expansion at /home/pol/cell_crawling/funcions.jl:351 [inlined]
+macro expansion at /home/pol/.julia/packages/Plots/sxUvK/src/animation.jl:251 [inlined]
+phasefield2! at /home/pol/cell_crawling/funcions.jl:331
+unknown function (ip: 0x7fccb28077d7)
+_jl_invoke at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2758 [inlined]
+ijl_apply_generic at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2940
+macro expansion at ./timing.jl:273 [inlined]
+top-level scope at /home/pol/cell_crawling/phase_field.jl:36
+jl_toplevel_eval_flex at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/toplevel.c:903
+jl_toplevel_eval_flex at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/toplevel.c:856
+ijl_toplevel_eval_in at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/toplevel.c:971
+eval at ./boot.jl:370 [inlined]
+include_string at ./loading.jl:1903
+_jl_invoke at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2758 [inlined]
+ijl_apply_generic at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2940
+_include at ./loading.jl:1963
+include at ./Base.jl:457
+jfptr_include_32440.clone_1 at /home/pol/julia-1.9.2/lib/julia/sys.so (unknown line)
+_jl_invoke at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2758 [inlined]
+ijl_apply_generic at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2940
+exec_options at ./client.jl:307
+_start at ./client.jl:522
+jfptr__start_43375.clone_1 at /home/pol/julia-1.9.2/lib/julia/sys.so (unknown line)
+_jl_invoke at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2758 [inlined]
+ijl_apply_generic at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/gf.c:2940
+jl_apply at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/julia.h:1879 [inlined]
+true_main at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/jlapi.c:573
+jl_repl_entrypoint at /cache/build/default-amdci5-2/julialang/julia-release-1-dot-9/src/jlapi.c:717
+main at julia (unknown line)
+__libc_start_main at /lib/x86_64-linux-gnu/libc.so.6 (unknown line)
+unknown function (ip: 0x401098)
+unknown function (ip: (nil))
+Allocations: 530326291 (Pool: 530003875; Big: 322416); GC: 2521
+2.25:0.25:3.0
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.25_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.25_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.25_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.25_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.25_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.25_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.5_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.5_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.5_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.5_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.5_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.5_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.75_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.75_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.75_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.75_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.75_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.75_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.0_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.0_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.0_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.0_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.0_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.0_B_1.5.gif
+6.25:0.25:7.0
+301.199938 seconds (1.33 G allocations: 270.812 GiB, 3.01% gc time, 0.72% compilation time)
+298.045110 seconds (1.33 G allocations: 270.543 GiB, 3.11% gc time)
+299.551707 seconds (1.33 G allocations: 270.543 GiB, 3.18% gc time)
+300.816833 seconds (1.33 G allocations: 270.543 GiB, 3.26% gc time)
+302.417203 seconds (1.33 G allocations: 270.543 GiB, 3.34% gc time)
+304.235242 seconds (1.33 G allocations: 270.544 GiB, 3.44% gc time)
+303.950069 seconds (1.33 G allocations: 270.543 GiB, 3.54% gc time)
+305.712506 seconds (1.33 G allocations: 270.543 GiB, 3.62% gc time)
+305.790815 seconds (1.33 G allocations: 270.543 GiB, 3.67% gc time)
+304.411444 seconds (1.33 G allocations: 270.543 GiB, 3.70% gc time)
+305.059403 seconds (1.33 G allocations: 270.543 GiB, 3.69% gc time)
+307.770001 seconds (1.33 G allocations: 270.543 GiB, 3.70% gc time)
+305.219146 seconds (1.33 G allocations: 270.543 GiB, 3.72% gc time)
+305.319842 seconds (1.33 G allocations: 270.543 GiB, 3.73% gc time)
+306.601137 seconds (1.33 G allocations: 270.543 GiB, 3.75% gc time)
+306.114357 seconds (1.33 G allocations: 270.543 GiB, 3.76% gc time)
+305.593452 seconds (1.33 G allocations: 270.543 GiB, 3.77% gc time)
+305.514847 seconds (1.33 G allocations: 270.543 GiB, 3.80% gc time)
+305.658090 seconds (1.33 G allocations: 270.543 GiB, 3.79% gc time)
+306.660829 seconds (1.33 G allocations: 270.543 GiB, 3.82% gc time)
+306.212123 seconds (1.33 G allocations: 270.543 GiB, 3.82% gc time)
+308.887585 seconds (1.33 G allocations: 270.543 GiB, 3.82% gc time)
+306.307910 seconds (1.33 G allocations: 270.543 GiB, 3.83% gc time)
+305.750716 seconds (1.33 G allocations: 270.543 GiB, 3.83% gc time)
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.25_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.25_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.25_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.25_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.25_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.25_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.5_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.5_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.5_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.5_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.5_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.5_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.75_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.75_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.75_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.75_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.75_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.75_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.0_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.0_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.0_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.0_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.0_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.0_B_1.5.gif
+1.25:0.25:2.0
+302.307231 seconds (1.33 G allocations: 270.814 GiB, 4.03% gc time, 0.66% compilation time)
+303.592091 seconds (1.33 G allocations: 270.547 GiB, 4.12% gc time)
+303.110783 seconds (1.33 G allocations: 270.547 GiB, 4.21% gc time)
+305.380434 seconds (1.33 G allocations: 270.545 GiB, 4.29% gc time)
+306.854481 seconds (1.33 G allocations: 270.549 GiB, 4.37% gc time)
+305.595390 seconds (1.33 G allocations: 270.551 GiB, 4.48% gc time)
+308.941741 seconds (1.33 G allocations: 270.545 GiB, 4.56% gc time)
+308.577651 seconds (1.33 G allocations: 270.545 GiB, 4.64% gc time)
+309.772753 seconds (1.33 G allocations: 270.545 GiB, 4.68% gc time)
+308.250573 seconds (1.33 G allocations: 270.545 GiB, 4.71% gc time)
+308.533077 seconds (1.33 G allocations: 270.552 GiB, 4.71% gc time)
+307.836177 seconds (1.33 G allocations: 270.547 GiB, 4.74% gc time)
+309.435248 seconds (1.33 G allocations: 270.544 GiB, 4.74% gc time)
+308.885782 seconds (1.33 G allocations: 270.545 GiB, 4.76% gc time)
+308.118974 seconds (1.33 G allocations: 270.546 GiB, 4.78% gc time)
+309.967645 seconds (1.33 G allocations: 270.547 GiB, 4.78% gc time)
+310.198555 seconds (1.33 G allocations: 270.548 GiB, 4.79% gc time)
+308.519690 seconds (1.33 G allocations: 270.544 GiB, 4.81% gc time)
+310.479959 seconds (1.33 G allocations: 270.545 GiB, 4.80% gc time)
+311.242983 seconds (1.33 G allocations: 270.546 GiB, 4.80% gc time)
+308.777699 seconds (1.33 G allocations: 270.544 GiB, 4.81% gc time)
+310.551891 seconds (1.33 G allocations: 270.544 GiB, 4.81% gc time)
+310.045719 seconds (1.33 G allocations: 270.549 GiB, 4.83% gc time)
+309.001127 seconds (1.33 G allocations: 270.545 GiB, 4.84% gc time)
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.25_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.25_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.25_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.25_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.25_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.25_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.5_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.5_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.5_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.5_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.5_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.5_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.75_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.75_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.75_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.75_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.75_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_0.75_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.0_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.0_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.0_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.0_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.0_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_1.0_B_1.5.gif
+0.25:0.25:1.0
+301.272411 seconds (1.33 G allocations: 270.825 GiB, 4.07% gc time, 0.64% compilation time)
+302.684529 seconds (1.33 G allocations: 270.550 GiB, 4.13% gc time)
+303.373550 seconds (1.33 G allocations: 270.557 GiB, 4.21% gc time)
+306.138250 seconds (1.33 G allocations: 270.557 GiB, 4.27% gc time)
+305.912974 seconds (1.33 G allocations: 270.549 GiB, 4.34% gc time)
+307.305630 seconds (1.33 G allocations: 270.552 GiB, 4.43% gc time)
+307.694088 seconds (1.33 G allocations: 270.549 GiB, 4.54% gc time)
+309.691329 seconds (1.33 G allocations: 270.547 GiB, 4.59% gc time)
+309.714691 seconds (1.33 G allocations: 270.550 GiB, 4.65% gc time)
+308.543222 seconds (1.33 G allocations: 270.551 GiB, 4.68% gc time)
+309.161586 seconds (1.33 G allocations: 270.554 GiB, 4.70% gc time)
+308.899055 seconds (1.33 G allocations: 270.553 GiB, 4.70% gc time)
+311.581549 seconds (1.33 G allocations: 270.545 GiB, 4.70% gc time)
+309.993530 seconds (1.33 G allocations: 270.548 GiB, 4.71% gc time)
+309.934040 seconds (1.33 G allocations: 270.552 GiB, 4.72% gc time)
+309.186940 seconds (1.33 G allocations: 270.550 GiB, 4.74% gc time)
+311.819417 seconds (1.33 G allocations: 270.548 GiB, 4.74% gc time)
+310.113352 seconds (1.33 G allocations: 270.553 GiB, 4.76% gc time)
+310.520393 seconds (1.33 G allocations: 270.547 GiB, 4.76% gc time)
+311.368763 seconds (1.33 G allocations: 270.546 GiB, 4.76% gc time)
+311.821642 seconds (1.33 G allocations: 270.548 GiB, 4.77% gc time)
+309.911681 seconds (1.33 G allocations: 270.546 GiB, 4.79% gc time)
+310.962425 seconds (1.33 G allocations: 270.547 GiB, 4.81% gc time)
+311.595127 seconds (1.33 G allocations: 270.550 GiB, 4.80% gc time)
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.25_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.25_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.25_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.25_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.25_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.25_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.5_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.5_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.5_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.5_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.5_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.5_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.75_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.75_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.75_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.75_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.75_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.75_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.0_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.0_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.0_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.0_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.0_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.0_B_1.5.gif
+4.25:0.25:5.0
+302.097458 seconds (1.33 G allocations: 270.812 GiB, 4.25% gc time, 0.71% compilation time)
+301.471248 seconds (1.33 G allocations: 270.543 GiB, 4.32% gc time)
+303.949300 seconds (1.33 G allocations: 270.543 GiB, 4.38% gc time)
+304.956406 seconds (1.33 G allocations: 270.543 GiB, 4.45% gc time)
+306.298580 seconds (1.33 G allocations: 270.543 GiB, 4.54% gc time)
+307.363187 seconds (1.33 G allocations: 270.544 GiB, 4.63% gc time)
+308.574629 seconds (1.33 G allocations: 270.543 GiB, 4.70% gc time)
+308.744211 seconds (1.33 G allocations: 270.543 GiB, 4.79% gc time)
+309.300725 seconds (1.33 G allocations: 270.543 GiB, 4.83% gc time)
+308.901864 seconds (1.33 G allocations: 270.543 GiB, 4.84% gc time)
+309.207227 seconds (1.33 G allocations: 270.543 GiB, 4.85% gc time)
+308.643341 seconds (1.33 G allocations: 270.543 GiB, 4.86% gc time)
+307.994940 seconds (1.33 G allocations: 270.543 GiB, 4.88% gc time)
+309.848327 seconds (1.33 G allocations: 270.543 GiB, 4.89% gc time)
+308.600816 seconds (1.33 G allocations: 270.543 GiB, 4.90% gc time)
+309.959072 seconds (1.33 G allocations: 270.543 GiB, 4.89% gc time)
+309.136594 seconds (1.33 G allocations: 270.543 GiB, 4.92% gc time)
+310.582063 seconds (1.33 G allocations: 270.543 GiB, 4.91% gc time)
+309.955425 seconds (1.33 G allocations: 270.543 GiB, 4.93% gc time)
+310.273827 seconds (1.33 G allocations: 270.543 GiB, 4.94% gc time)
+308.827077 seconds (1.33 G allocations: 270.543 GiB, 4.94% gc time)
+310.422842 seconds (1.33 G allocations: 270.543 GiB, 4.96% gc time)
+308.467067 seconds (1.33 G allocations: 270.543 GiB, 4.98% gc time)
+310.331122 seconds (1.33 G allocations: 270.543 GiB, 4.95% gc time)
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.25_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.25_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.25_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.25_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.25_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.25_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.5_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.5_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.5_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.5_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.5_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.5_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.75_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.75_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.75_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.75_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.75_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.75_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_10.0_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_10.0_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_10.0_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_10.0_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_10.0_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_10.0_B_1.5.gif
+9.25:0.25:10.0
+301.749388 seconds (1.33 G allocations: 270.812 GiB, 4.02% gc time, 0.76% compilation time)
+303.627401 seconds (1.33 G allocations: 270.543 GiB, 4.08% gc time)
+305.141130 seconds (1.33 G allocations: 270.543 GiB, 4.15% gc time)
+303.539973 seconds (1.33 G allocations: 270.543 GiB, 4.22% gc time)
+305.768256 seconds (1.33 G allocations: 270.543 GiB, 4.28% gc time)
+306.275046 seconds (1.33 G allocations: 270.543 GiB, 4.36% gc time)
+307.043688 seconds (1.33 G allocations: 270.543 GiB, 4.44% gc time)
+307.811356 seconds (1.33 G allocations: 270.543 GiB, 4.52% gc time)
+309.711508 seconds (1.33 G allocations: 270.543 GiB, 4.56% gc time)
+307.589757 seconds (1.33 G allocations: 270.543 GiB, 4.59% gc time)
+309.911752 seconds (1.33 G allocations: 270.543 GiB, 4.58% gc time)
+309.280993 seconds (1.33 G allocations: 270.543 GiB, 4.59% gc time)
+308.690409 seconds (1.33 G allocations: 270.543 GiB, 4.61% gc time)
+308.204402 seconds (1.33 G allocations: 270.543 GiB, 4.62% gc time)
+308.791211 seconds (1.33 G allocations: 270.543 GiB, 4.63% gc time)
+309.264726 seconds (1.33 G allocations: 270.543 GiB, 4.65% gc time)
+308.372864 seconds (1.33 G allocations: 270.543 GiB, 4.65% gc time)
+309.896936 seconds (1.33 G allocations: 270.543 GiB, 4.65% gc time)
+309.767044 seconds (1.33 G allocations: 270.543 GiB, 4.66% gc time)
+308.041358 seconds (1.33 G allocations: 270.543 GiB, 4.68% gc time)
+309.592507 seconds (1.33 G allocations: 270.543 GiB, 4.68% gc time)
+308.947367 seconds (1.33 G allocations: 270.543 GiB, 4.68% gc time)
+309.001123 seconds (1.33 G allocations: 270.543 GiB, 4.70% gc time)
+307.819580 seconds (1.33 G allocations: 270.543 GiB, 4.67% gc time)
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.25_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.25_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.25_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.25_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.25_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.25_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.5_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.5_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.5_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.5_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.5_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.5_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.75_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.75_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.75_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.75_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.75_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_5.75_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.0_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.0_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.0_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.0_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.0_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_6.0_B_1.5.gif
+5.25:0.25:6.0
+305.412708 seconds (1.33 G allocations: 270.812 GiB, 4.03% gc time, 0.72% compilation time)
+304.797360 seconds (1.33 G allocations: 270.543 GiB, 4.12% gc time)
+304.701746 seconds (1.33 G allocations: 270.544 GiB, 4.20% gc time)
+305.337231 seconds (1.33 G allocations: 270.543 GiB, 4.27% gc time)
+307.417157 seconds (1.33 G allocations: 270.543 GiB, 4.34% gc time)
+307.393907 seconds (1.33 G allocations: 270.543 GiB, 4.45% gc time)
+309.358217 seconds (1.33 G allocations: 270.543 GiB, 4.51% gc time)
+310.436150 seconds (1.33 G allocations: 270.543 GiB, 4.59% gc time)
+309.417352 seconds (1.33 G allocations: 270.543 GiB, 4.66% gc time)
+311.168838 seconds (1.33 G allocations: 270.543 GiB, 4.67% gc time)
+308.930067 seconds (1.33 G allocations: 270.543 GiB, 4.68% gc time)
+310.388846 seconds (1.33 G allocations: 270.543 GiB, 4.69% gc time)
+309.933516 seconds (1.33 G allocations: 270.543 GiB, 4.69% gc time)
+309.396199 seconds (1.33 G allocations: 270.543 GiB, 4.70% gc time)
+310.914915 seconds (1.33 G allocations: 270.543 GiB, 4.72% gc time)
+310.062946 seconds (1.33 G allocations: 270.543 GiB, 4.74% gc time)
+311.178489 seconds (1.33 G allocations: 270.543 GiB, 4.74% gc time)
+310.640243 seconds (1.33 G allocations: 270.543 GiB, 4.75% gc time)
+309.351400 seconds (1.33 G allocations: 270.543 GiB, 4.75% gc time)
+312.228856 seconds (1.33 G allocations: 270.543 GiB, 4.76% gc time)
+310.451511 seconds (1.33 G allocations: 270.543 GiB, 4.76% gc time)
+310.328953 seconds (1.33 G allocations: 270.543 GiB, 4.79% gc time)
+311.370666 seconds (1.33 G allocations: 270.543 GiB, 4.79% gc time)
+310.048352 seconds (1.33 G allocations: 270.543 GiB, 4.76% gc time)
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.25_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.25_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.25_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.25_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.25_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.25_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.5_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.5_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.5_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.5_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.5_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.5_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.75_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.75_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.75_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.75_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.75_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_7.75_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.0_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.0_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.0_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.0_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.0_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.0_B_1.5.gif
+7.25:0.25:8.0
+303.919146 seconds (1.33 G allocations: 270.812 GiB, 4.21% gc time, 0.74% compilation time)
+303.720136 seconds (1.33 G allocations: 270.543 GiB, 4.28% gc time)
+304.657419 seconds (1.33 G allocations: 270.543 GiB, 4.35% gc time)
+306.015179 seconds (1.33 G allocations: 270.543 GiB, 4.41% gc time)
+307.160923 seconds (1.33 G allocations: 270.543 GiB, 4.51% gc time)
+307.173056 seconds (1.33 G allocations: 270.543 GiB, 4.59% gc time)
+308.408613 seconds (1.33 G allocations: 270.543 GiB, 4.66% gc time)
+310.499035 seconds (1.33 G allocations: 270.543 GiB, 4.72% gc time)
+307.656043 seconds (1.33 G allocations: 270.543 GiB, 4.79% gc time)
+311.451978 seconds (1.33 G allocations: 270.543 GiB, 4.79% gc time)
+308.520029 seconds (1.33 G allocations: 270.543 GiB, 4.82% gc time)
+309.158537 seconds (1.33 G allocations: 270.543 GiB, 4.82% gc time)
+308.951587 seconds (1.33 G allocations: 270.543 GiB, 4.83% gc time)
+310.266825 seconds (1.33 G allocations: 270.543 GiB, 4.83% gc time)
+310.211095 seconds (1.33 G allocations: 270.543 GiB, 4.86% gc time)
+311.008584 seconds (1.33 G allocations: 270.543 GiB, 4.87% gc time)
+310.177054 seconds (1.33 G allocations: 270.543 GiB, 4.88% gc time)
+310.671755 seconds (1.33 G allocations: 270.543 GiB, 4.90% gc time)
+310.530168 seconds (1.33 G allocations: 270.543 GiB, 4.89% gc time)
+309.710315 seconds (1.33 G allocations: 270.543 GiB, 4.91% gc time)
+312.350410 seconds (1.33 G allocations: 270.543 GiB, 4.91% gc time)
+310.669107 seconds (1.33 G allocations: 270.543 GiB, 4.92% gc time)
+312.752250 seconds (1.33 G allocations: 270.543 GiB, 4.91% gc time)
+309.525909 seconds (1.33 G allocations: 270.543 GiB, 4.90% gc time)
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.25_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.25_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.25_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.25_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.25_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.25_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.5_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.5_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.5_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.5_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.5_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.5_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.75_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.75_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.75_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.75_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.75_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.75_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.0_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.0_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.0_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.0_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.0_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_4.0_B_1.5.gif
+3.25:0.25:4.0
+304.268238 seconds (1.33 G allocations: 270.812 GiB, 4.07% gc time, 0.70% compilation time)
+304.780016 seconds (1.33 G allocations: 270.543 GiB, 4.12% gc time)
+306.853334 seconds (1.33 G allocations: 270.544 GiB, 4.19% gc time)
+308.288279 seconds (1.33 G allocations: 270.543 GiB, 4.26% gc time)
+310.713457 seconds (1.33 G allocations: 270.544 GiB, 4.34% gc time)
+307.615631 seconds (1.33 G allocations: 270.530 GiB, 4.46% gc time, 0.00% compilation time)
+311.314038 seconds (1.33 G allocations: 270.543 GiB, 4.51% gc time)
+310.451330 seconds (1.33 G allocations: 270.544 GiB, 4.60% gc time)
+310.989909 seconds (1.33 G allocations: 270.544 GiB, 4.65% gc time)
+311.300115 seconds (1.33 G allocations: 270.544 GiB, 4.67% gc time)
+312.158048 seconds (1.33 G allocations: 270.544 GiB, 4.66% gc time)
+311.037148 seconds (1.33 G allocations: 270.544 GiB, 4.67% gc time)
+312.350419 seconds (1.33 G allocations: 270.543 GiB, 4.69% gc time)
+314.162019 seconds (1.33 G allocations: 270.544 GiB, 4.70% gc time)
+314.001004 seconds (1.33 G allocations: 270.543 GiB, 4.72% gc time)
+311.906195 seconds (1.33 G allocations: 270.543 GiB, 4.75% gc time)
+314.042721 seconds (1.33 G allocations: 270.543 GiB, 4.75% gc time)
+313.705260 seconds (1.33 G allocations: 270.544 GiB, 4.74% gc time)
+312.087055 seconds (1.33 G allocations: 270.543 GiB, 4.76% gc time)
+313.787115 seconds (1.33 G allocations: 270.543 GiB, 4.76% gc time)
+314.577918 seconds (1.33 G allocations: 270.543 GiB, 4.76% gc time)
+313.081594 seconds (1.33 G allocations: 270.543 GiB, 4.77% gc time)
+315.312730 seconds (1.33 G allocations: 270.544 GiB, 4.78% gc time)
+309.855654 seconds (1.33 G allocations: 270.543 GiB, 4.73% gc time)
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.25_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.25_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.25_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.25_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.25_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.25_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.5_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.5_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.5_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.5_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.5_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.5_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.75_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.75_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.75_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.75_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.75_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_8.75_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.0_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.0_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.0_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.0_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.0_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_9.0_B_1.5.gif
+8.25:0.25:9.0
+308.145413 seconds (1.33 G allocations: 270.812 GiB, 4.07% gc time, 0.74% compilation time)
+307.751340 seconds (1.33 G allocations: 270.543 GiB, 4.15% gc time)
+308.672532 seconds (1.33 G allocations: 270.543 GiB, 4.22% gc time)
+309.757765 seconds (1.33 G allocations: 270.543 GiB, 4.28% gc time)
+312.467043 seconds (1.33 G allocations: 270.543 GiB, 4.35% gc time)
+310.724534 seconds (1.33 G allocations: 270.543 GiB, 4.43% gc time)
+311.371613 seconds (1.33 G allocations: 270.543 GiB, 4.54% gc time)
+313.496681 seconds (1.33 G allocations: 270.543 GiB, 4.60% gc time)
+312.382111 seconds (1.33 G allocations: 270.543 GiB, 4.65% gc time)
+312.512268 seconds (1.33 G allocations: 270.543 GiB, 4.66% gc time)
+313.473617 seconds (1.33 G allocations: 270.543 GiB, 4.66% gc time)
+313.546569 seconds (1.33 G allocations: 270.543 GiB, 4.68% gc time)
+314.523136 seconds (1.33 G allocations: 270.543 GiB, 4.68% gc time)
+312.489456 seconds (1.33 G allocations: 270.543 GiB, 4.71% gc time)
+313.202489 seconds (1.33 G allocations: 270.543 GiB, 4.72% gc time)
+313.677092 seconds (1.33 G allocations: 270.543 GiB, 4.73% gc time)
+315.146900 seconds (1.33 G allocations: 270.543 GiB, 4.76% gc time)
+314.584945 seconds (1.33 G allocations: 270.543 GiB, 4.76% gc time)
+314.332208 seconds (1.33 G allocations: 270.543 GiB, 4.77% gc time)
+313.677808 seconds (1.33 G allocations: 270.543 GiB, 4.79% gc time)
+314.329113 seconds (1.33 G allocations: 270.543 GiB, 4.79% gc time)
+314.920765 seconds (1.33 G allocations: 270.543 GiB, 4.80% gc time)
+315.065604 seconds (1.33 G allocations: 270.543 GiB, 4.80% gc time)
+308.103018 seconds (1.33 G allocations: 270.543 GiB, 4.66% gc time)
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.25_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.25_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.25_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.25_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.25_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.25_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.5_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.5_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.5_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.5_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.5_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.5_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.75_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.75_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.75_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.75_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.75_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_2.75_B_1.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.0_B_0.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.0_B_0.5.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.0_B_0.75.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.0_B_1.0.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.0_B_1.25.gif
+[ Info: Saved animation to /home/pol/figs2/pf_4_A_3.0_B_1.5.gif
+2.25:0.25:3.0
+304.365929 seconds (1.33 G allocations: 270.813 GiB, 4.03% gc time, 0.74% compilation time)
+305.057691 seconds (1.33 G allocations: 270.544 GiB, 4.11% gc time)
+306.944954 seconds (1.33 G allocations: 270.545 GiB, 4.19% gc time)
+307.017217 seconds (1.33 G allocations: 270.545 GiB, 4.26% gc time)
+307.374193 seconds (1.33 G allocations: 270.547 GiB, 4.35% gc time)
+307.941320 seconds (1.33 G allocations: 270.546 GiB, 4.43% gc time)
+310.789349 seconds (1.33 G allocations: 270.544 GiB, 4.51% gc time)
+312.674413 seconds (1.33 G allocations: 270.544 GiB, 4.58% gc time)
+310.530109 seconds (1.33 G allocations: 270.545 GiB, 4.64% gc time)
+311.209453 seconds (1.33 G allocations: 270.545 GiB, 4.67% gc time)
+312.952742 seconds (1.33 G allocations: 270.544 GiB, 4.66% gc time)
+311.932278 seconds (1.33 G allocations: 270.546 GiB, 4.67% gc time)
+312.405314 seconds (1.33 G allocations: 270.544 GiB, 4.68% gc time)
+311.231121 seconds (1.33 G allocations: 270.544 GiB, 4.70% gc time)
+311.645800 seconds (1.33 G allocations: 270.545 GiB, 4.70% gc time)
+312.059850 seconds (1.33 G allocations: 270.545 GiB, 4.72% gc time)
+313.085840 seconds (1.33 G allocations: 270.544 GiB, 4.72% gc time)
+311.266135 seconds (1.33 G allocations: 270.544 GiB, 4.73% gc time)
+313.025493 seconds (1.33 G allocations: 270.544 GiB, 4.72% gc time)
+312.212439 seconds (1.33 G allocations: 270.543 GiB, 4.73% gc time)
+312.505997 seconds (1.33 G allocations: 270.544 GiB, 4.74% gc time)
+312.649047 seconds (1.33 G allocations: 270.545 GiB, 4.76% gc time)
+312.690906 seconds (1.33 G allocations: 270.544 GiB, 4.76% gc time)
+303.580181 seconds (1.33 G allocations: 270.544 GiB, 4.60% gc time)

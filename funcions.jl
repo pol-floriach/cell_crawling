@@ -354,7 +354,7 @@ module PhaseField
 
     end
 
-     # Function with rigged force, with bigger attraction well 
+    # Rigged force, quadratic only if too close (repulsion), constant > 0 if not to far (attraction), 0 if too far
     function phasefield3!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, params::Params, rep::RepField, stoptime)
         (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
         (; A, B) = rep
@@ -364,9 +364,10 @@ module PhaseField
         ϕ_tot = vol*ones(N)
         ∇ϕ_tot = sum(∇ϕ)
         ϕ_all = sum(ϕ)
-        amplitude = sqrt(2*σ2*dt)/dx* 0.4
+        amplitude = sqrt(2*σ2*dt)/dx
         dϕ = [zeros(nx,ny) for i in 1:N]
 
+        F_l = 0.0
         anim = @animate for timestep in 1:Int(round(stoptime/dt))
         # anim = @animate for timestep in ProgressBar(1:Int(round(stoptime/dt)))
 
@@ -380,8 +381,23 @@ module PhaseField
             for k in 1:N
                 ∇ϕₖ = ∇ϕ[k]
                 ϕₖ = ϕ[k]
-                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕₖ)/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕₖ + ξ*∇ϕₖ + A*(-ϕₖ*(ϕ_all-ϕₖ) + B*ϕₖ^2*(ϕ_all-ϕₖ)^2)
-                ϕ[k] = ϕ[k] + dt*dϕ[k]
+                
+                # Attraction / repulsion force
+                F_tot = 0.0
+                for l in 1:N
+                    ϕₗ = ϕ[l]
+                    if ϕₖ*ϕₗ < 0.05
+                        F_l = 0.0
+                    elseif ϕₖ*ϕₗ >= 0.25
+                        F_l = -A*ϕₖ*ϕₗ
+                    else 
+                        F_l = B
+                    end
+                    F_tot += F_l
+                end
+
+                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕₖ)/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕₖ + ξ*∇ϕₖ + F_tot
+                ϕ[k] += dt*dϕ[k]
                 ϕ_tot[k] = sum(ϕ[k])
             end
             ϕ_all = sum(ϕ)
@@ -389,10 +405,7 @@ module PhaseField
             # Plot
             heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800))
         end every 1000
-        gif(anim, "/home/pol/figs2/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
-
+        gif(anim, "/home/pol/cell_crawling/figs/home/pol/figs3/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
     end
-
-
 end
 
