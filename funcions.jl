@@ -209,7 +209,7 @@ end
 
 # Main functions, used for the simulation
 module PhaseField 
-    export phasefield!, phasefield2!
+    export phasefield!, phasefield2!, phasefield3!
     using Plots,ProgressBars, ..PhaseFieldConstants, ..Initialize, ..Numerical, ..OtherFunctions 
 
     Mat = Matrix{Float64}
@@ -368,6 +368,7 @@ module PhaseField
         dϕ = [zeros(nx,ny) for i in 1:N]
 
         F_l = 0.0
+        cond = 0.0
         anim = @animate for timestep in 1:Int(round(stoptime/dt))
         # anim = @animate for timestep in ProgressBar(1:Int(round(stoptime/dt)))
 
@@ -382,18 +383,24 @@ module PhaseField
                 ∇ϕₖ = ∇ϕ[k]
                 ϕₖ = ϕ[k]
                 
-                # Attraction / repulsion force
+                # Attraction / repulsion force bc of other cells
+
                 F_tot = 0.0
-                for l in 1:N
-                    ϕₗ = ϕ[l]
-                    if ϕₖ*ϕₗ < 0.05
-                        F_l = 0.0
-                    elseif ϕₖ*ϕₗ >= 0.25
-                        F_l = -A*ϕₖ*ϕₗ
-                    else 
-                        F_l = B
+                if l == k
+                    for l in 1:N
+                        for m in 1:nx, n in 1:nx
+                            ϕₗ = ϕ[l]
+                            cond = ϕₖ[m,n]*ϕₗ[m,n]
+                            if cond < 0.05
+                                F_l = 0.0
+                            elseif cond >= 0.25
+                                F_l = -A*cond
+                            else 
+                                F_l = B
+                            end
+                            F_tot += F_l
+                        end
                     end
-                    F_tot += F_l
                 end
 
                 dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕₖ)/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕₖ + ξ*∇ϕₖ + F_tot
@@ -402,10 +409,14 @@ module PhaseField
             end
             ϕ_all = sum(ϕ)
             ∇ϕ_tot = sum(∇ϕ)
+
+            # Stop if NaN
+            any(isnan,ϕ_all) ? break : nothing
+            
             # Plot
             heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800))
         end every 1000
-        gif(anim, "/home/pol/cell_crawling/figs/home/pol/figs3/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
+        gif(anim, "/home/pol/figs_rigged/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
     end
 end
 

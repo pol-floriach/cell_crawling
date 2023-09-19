@@ -23,7 +23,7 @@ diffusion = Diffusion(k,σ_c,α,D);
 ξ, ϕ, ∇ϕ, ∇²ϕ  = init(N, nx,ny);
 
 rang_integracio = parse(Int,ARGS[1])
-for i in 0:9
+for i in 0:5
     if rang_integracio == i 
         global A_range = i+0.25:0.25:i+1
     end
@@ -31,7 +31,7 @@ end
 
 println(A_range)
 
-for A in A_range, B in 0.25:0.25:1.5
+for A in A_range, B in 0.25:0.25:5
     rep = RepField(A, B)
-    @time phasefield2!(ϕ, ∇ϕ, ∇²ϕ, ξ, N, params, rep, stoptime);
+    @time phasefield3!(ϕ, ∇ϕ, ∇²ϕ, ξ, N, params, rep, stoptime);
 end
