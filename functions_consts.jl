@@ -1,14 +1,13 @@
 # Constants and struct definitions for organizing
 module PhaseFieldConstants
-    export dt, dx, rodx, vol, ϵ, γ, τ, β, σ2, τ_ξ, k, σ_c, α, repulsion, D
-    export Params, Diffusion, RepField
+    export dt, dx, rodx, vol, γ, ϵ, τ, β, σ2, τ_ξ
 
     # Integration constants 
     const dt = 1e-3;
     const dx = 0.15;
 
     # Phase Field
-    rodx = 9.0
+    const rodx = 9.0
     const ro = rodx*dx;
     const vol = π*rodx^2;
 
@@ -16,41 +15,17 @@ module PhaseFieldConstants
     const γ = 2.0;
     const τ = 2.0;
     const β = 0.50;
-    repulsion = 0.70; 
+    # const repulsion = 0.70; 
     # Noise 
     const σ2 = 0.0150;
     const τ_ξ = 10.0;
 
     # External diffusion
-    k = 1.0
-    σ_c = 1.0
-    α = 0.01
-    D = 0.1
+    # k = 1.0
+    # σ_c = 1.0
+    # α = 0.01
+    # D = 0.1
 
-    struct Params
-        dt::Float64
-        dx::Float64
-        rodx::Float64
-        vol::Float64
-        ϵ::Float64
-        γ::Float64
-        τ::Float64
-        β::Float64
-        τ_ξ::Float64
-        σ2::Float64
-    end
-
-    struct Diffusion
-        k::Float64
-        σ_c::Float64
-        α::Float64
-        D::Float64
-    end
-
-    struct RepField
-        A::Float64
-        B::Float64
-    end
 end
 
 # Gradient and laplacian functions 
@@ -177,6 +152,7 @@ module Initialize
         end
         return ξ, ϕ, ∇ϕ, ∇²ϕ
     end
+
     # Vector initialization with external concentration diffusion
     function initwdiff(N, nx, ny)
         ξ = randn(nx,ny);
@@ -209,17 +185,14 @@ end
 
 # Main functions, used for the simulation
 module PhaseField 
-    export phasefield!, phasefield2!, phasefield3!, phasefield_rigged!
+    export phasefield!, phasefield2!, phasefield3!
     using Plots,ProgressBars, ..PhaseFieldConstants, ..Initialize, ..Numerical, ..OtherFunctions 
 
     Mat = Matrix{Float64}
     ArrMat = Vector{Mat}
 
     # Function for integration for a single cell
-    function phasefield!(ϕ::Mat, ∇ϕ::Mat, ∇²ϕ::Mat, ξ::Mat, params::Params, stoptime)
-        # dt, dx, stoptime, rodx, ro,  vol, α, ϵ, γ, τ, β, repulsion, τ_ξ, σ2 = params
-        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
-
+    function phasefield!(ϕ::Mat, ∇ϕ::Mat, ∇²ϕ::Mat, ξ::Mat, stoptime)
         # Initialization of phase field
         gen_phi!(ϕ,30,50)
         ϕ_tot = vol
@@ -240,11 +213,9 @@ module PhaseField
         end every 500
     end
     # Function for integration for multiple cells
-    function phasefield!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, params::Params, repulsion, stoptime)
-        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
+    function phasefield!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, repulsion, stoptime)
         nx, ny = size(ϕ[1])
         # Initialization of phase field
-        # generation_phi!(ϕ[1],20,20) ; generation_phi!(ϕ[2],80,80)
         gen_phi_equis!(ϕ, N, rodx, dx, ϵ)
         ϕ_tot = vol*ones(N)
         ∇ϕ_tot = sum(∇ϕ)
@@ -272,9 +243,7 @@ module PhaseField
         gif(anim, "pf_$(N)_cells_w_repulsion_$(repulsion).gif", fps = 15);
     end
     # Function for integration of multiple cells, with external concentration diffusion
-    function phasefield!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, c::Mat, ∇²c::Mat, N, params::Params, diffusion::Diffusion, repulsion, stoptime)
-        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
-        (; k, σ_c, α, D) = diffusion
+    function phasefield!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, c::Mat, ∇²c::Mat, N, repulsion, stoptime)
         nx, ny = size(ϕ[1])
         # Initialization of phase field
         gen_phi_equis!(ϕ, N, rodx, dx, ϵ)
@@ -316,9 +285,7 @@ module PhaseField
         gif(anim, "pf_2groups_$(N)_rep_$(repulsion)_k_$(k)_attr_$(α)_deg_$(σ_c)_gen_$(α)_diff_$(D).gif", fps = 15);
     end
 # Function for integration of multiple cells with quadratic attraction/repulsion potential
-    function phasefield!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, params::Params, rep::RepField, stoptime)
-        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
-        (; A, B) = rep
+    function phasefield2!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, A, B, stoptime)
         nx, ny = size(ϕ[1])
         # Initialization of phase field
         gen_phi_equis!(ϕ, N, rodx, dx, ϵ)
@@ -355,68 +322,6 @@ module PhaseField
     end
 
     # Rigged force, quadratic only if too close (repulsion), constant > 0 if not to far (attraction), 0 if too far
-    function phasefield_rigged!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, params::Params, rep::RepField, stoptime)
-        (; dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2) = params
-        (; A, B) = rep
-        nx, ny = size(ϕ[1])
-        # Initialization of phase field
-        gen_phi_equis!(ϕ, N, rodx, dx, ϵ)
-        ϕ_tot = vol*ones(N)
-        ∇ϕ_tot = sum(∇ϕ)
-        ϕ_all = sum(ϕ)
-        amplitude = sqrt(2*σ2*dt)/dx
-        dϕ = [zeros(nx,ny) for i in 1:N]
-
-        F_l = zeros(nx,ny)
-        cond = 0.0
-        anim = @animate for timestep in 1:Int(round(stoptime/dt))
-        # anim = @animate for timestep in ProgressBar(1:Int(round(stoptime/dt)))
-
-            # Update values for laplacian and gradient
-            @. laplacian!(ϕ,∇²ϕ,dx, nx, ny); 
-            @. gradient!(ϕ,∇ϕ,dx, nx, ny);
-
-            # Next step
-            ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
-            
-            F_tot = zeros(nx,ny)
-            for k in 1:N
-                ∇ϕₖ = ∇ϕ[k]
-                ϕₖ = ϕ[k]
-                # Attraction / repulsion force bc of other cells
-                    for l in 1:N
-                	    if l != k
-                            for m in 1:nx, n in 1:ny
-                                ϕₗ = ϕ[l]
-                                cond = ϕₖ[m,n]*ϕₗ[m,n]
-                                if cond < 0.05
-                                    F_l[m,n] = 0.0
-                                elseif cond >= 0.25
-                                    F_l[m,n] += -A*cond
-                                else 
-                                    F_l[m,n] = B
-                                end
-                            end
-                        end
-                        F_tot += F_l
-                    end
-
-                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕₖ)/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕₖ + ξ*∇ϕₖ + F_tot
-                ϕ[k] += dt*dϕ[k]
-                ϕ_tot[k] = sum(ϕ[k])
-            end
-            ϕ_all = sum(ϕ)
-            ∇ϕ_tot = sum(∇ϕ)
-
-            # Stop if NaN
-            any(isnan,ϕ_all) ? (println("Algun valor és NaN"); break) : nothing
-
-            # Plot
-            heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800))
-        end every 1000
-        gif(anim, "/home/pol/figs_rigged/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
-    end
-    # mateixa pero sense els structs per comparar performance . + @inbounds i @fastmath
     function phasefield_rigged!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, A, B, stoptime)
         nx, ny = size(ϕ[1])
         # Initialization of phase field
@@ -440,7 +345,7 @@ module PhaseField
             ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
             
             F_tot = zeros(nx,ny)
-            @inbounds for k in 1:N
+            for k in 1:N
                 ∇ϕₖ = ∇ϕ[k]
                 ϕₖ = ϕ[k]
                 # Attraction / repulsion force bc of other cells

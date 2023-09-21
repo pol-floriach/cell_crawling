@@ -7,7 +7,7 @@ using Plots, .PhaseFieldConstants, .Numerical, .Initialize, .OtherFunctions, .Ph
 # Mutable simulation parameters
 N = 4;
 nx = ny = 55;
-stoptime = 400.0;
+stoptime = 50.0;
 # repulsion = 2.3;
 
 params = Params(dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2);
@@ -23,15 +23,16 @@ diffusion = Diffusion(k,σ_c,α,D);
 ξ, ϕ, ∇ϕ, ∇²ϕ  = init(N, nx,ny);
 
 rang_integracio = parse(Int,ARGS[1])
-for i in 0:5
+for i in 0:9
     if rang_integracio == i 
-        global A_range = i+0.25:0.25:i+1
+        global A_range = i+0.1:0.1:Int(i+1)
     end
 end
 
 println(A_range)
 
-for A in A_range, B in 0.25:0.25:5
+for A in A_range, B in 0.0:0.1:5
     rep = RepField(A, B)
-    @time phasefield3!(ϕ, ∇ϕ, ∇²ϕ, ξ, N, params, rep, stoptime);
+    # @time phasefield3!(ϕ, ∇ϕ, ∇²ϕ, ξ, N, params, rep, stoptime)
+    @time phasefield_rigged!(ϕ, ∇ϕ, ∇²ϕ, ξ, N, A, B, stoptime)
 end
