@@ -2,6 +2,11 @@
 ENV["GKSwstype"] = "nul"
 # Code to run the simulation. Functions in 
 include("/home/pol/cell_crawling/funcions.jl")
+include("/home/pol/cell_crawling/constants.jl")
+include("/home/pol/cell_crawling/numerical.jl")
+include("/home/pol/cell_crawling/init.jl")
+include("/home/pol/cell_crawling/mainfunction.jl")
+
 using Plots, .PhaseFieldConstants, .Numerical, .Initialize, .OtherFunctions, .PhaseField, ProgressBars
 
 # Mutable simulation parameters
