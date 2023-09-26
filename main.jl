@@ -1,17 +1,17 @@
 #!/home/pol/julia-1.9.2/bin/julia
 ENV["GKSwstype"] = "nul"
 # Code to run the simulation. Functions in 
-include("/home/pol/cell_crawling/funcions.jl")
+# include("/home/pol/cell_crawling/funcions.jl")
 include("/home/pol/cell_crawling/constants.jl")
 include("/home/pol/cell_crawling/numerical.jl")
 include("/home/pol/cell_crawling/init.jl")
-include("/home/pol/cell_crawling/mainfunction.jl")
+include("/home/pol/cell_crawling/phasefield.jl")
 
 using Plots, .PhaseFieldConstants, .Numerical, .Initialize, .OtherFunctions, .PhaseField, ProgressBars
 
 # Mutable simulation parameters
 N = 4;
-nx = ny = 55;
+nx = ny = 100;
 stoptime = 400.0;
 # repulsion = 2.3;
 
@@ -28,7 +28,7 @@ diffusion = Diffusion(k,σ_c,α,D);
 ξ, ϕ, ∇ϕ, ∇²ϕ  = init(N, nx,ny);
 
 rang_integracio = parse(Int,ARGS[1])
-for i in 8:16
+for i in 5:10
     if rang_integracio == i 
         global A_range = i+0.25:0.25:Int(i+1)
     end
