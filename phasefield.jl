@@ -1,6 +1,6 @@
 # Main function definitions for different modifications of the phase field model
 module PhaseField 
-    export phasefield!, phasefield2!, phasefield3!, phasefield_rigged!
+    export phasefield!, phasefield2!, phasefield3!, phasefield_rigged!, phasefield_rigged_2!, phasefield_rigged_3!
     using Plots,ProgressBars, ..PhaseFieldConstants, ..Initialize, ..Numerical, ..OtherFunctions 
 
     Mat = Matrix{Float64}
@@ -305,7 +305,7 @@ module PhaseField
                                 elseif cond >= 0.25
                                     F_l[m,n] += -A*(cond-0.25)
                                 else 
-                                    F_l[m,n] = B*(cond-0.25)*(cond-0.05)
+                                    F_l[m,n] = -B*(cond-0.25)*(cond-0.05)
                                 end
                             end
                         end
@@ -328,6 +328,69 @@ module PhaseField
         gif(anim, "/home/pol/figs_rigged_new/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
     end
 
+    # A bit tweaked (continuous )
+    function phasefield_rigged_3!(ϕ::ArrMat, ∇ϕ::ArrMat, ∇²ϕ::ArrMat, ξ::Mat, N, A, B, stoptime)
+        nx, ny = size(ϕ[1])
+        # Initialization of phase field
+        gen_phi_equis!(ϕ, N, rodx, dx, ϵ)
+        ϕ_tot = vol*ones(N)
+        ∇ϕ_tot = sum(∇ϕ)
+        ϕ_all = sum(ϕ)
+        amplitude = sqrt(2*σ2*dt)/dx * 0.3
+        dϕ = [zeros(nx,ny) for i in 1:N]
+
+        F_l = zeros(nx,ny)
+        cond = 0.0
+        anim = @animate for timestep in 1:Int(round(stoptime/dt))
+        # anim = @animate for timestep in ProgressBar(1:Int(round(stoptime/dt)))
+
+            # Update values for laplacian and gradient
+            @. laplacian!(ϕ,∇²ϕ,dx, nx, ny); 
+            @. gradient!(ϕ,∇ϕ,dx, nx, ny);
+
+            # Next step
+            ξ += dt*(-ξ/τ_ξ) + randn(nx,ny)*amplitude
+            
+            F_tot = zeros(nx,ny)
+            @inbounds for k in 1:N
+                ∇ϕₖ = ∇ϕ[k]
+                ϕₖ = ϕ[k]
+                # Attraction / repulsion force bc of other cells
+                    for l in 1:N
+                	    if l != k
+                            for m in 1:nx, n in 1:ny
+                                ϕₗ = ϕ[l]
+                                cond = ϕₖ[m,n]*ϕₗ[m,n]
+                                if cond < 0.05
+                                    F_l[m,n] = 0.0
+                                elseif cond >= 0.25
+                                    F_l[m,n] += -A*(cond-0.25)
+                                elseif cond >= 0.05 && cond <= 0.15
+                                    F_l[m,n] += 0.15^2 - 0.045 + 0.0125 #valor maxim de la parabola: ((a+b)/2)^2 - (a+b)*(a+b)/2 + a*b = -(a^2+b^2)/4 + a*b (en aquest cas )
+                                    F_l[m,n] += B*0.01 # x_max = (a+b)/2, f(x_max) = -(x_max - a)*(x_max-b) , en aquest cas a = 0.05 i b = 0.25
+                                else
+                                    F_l[m,n] = -B*(cond-0.25)*(cond-0.05)
+                                end
+                            end
+                        end
+                        F_tot += F_l
+                    end
+
+                dϕ[k] = @.  γ/τ * (∇²ϕ[k] + Gd(ϕₖ)/(ϵ^2)) - β/τ *(ϕ_tot[k]-vol)*∇ϕₖ + ξ*∇ϕₖ + F_tot
+                ϕ[k] += dt*dϕ[k]
+                ϕ_tot[k] = sum(ϕ[k])
+            end
+            ϕ_all = sum(ϕ)
+            ∇ϕ_tot = sum(∇ϕ)
+
+            # Stop if NaN
+            any(isnan,ϕ_all) ? (println("Algun valor és NaN"); break) : nothing
+
+            # Plot
+            heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800))
+        end every 1000
+        gif(anim, "/home/pol/figs_rigged_nou/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
+    end
 
 
 end
