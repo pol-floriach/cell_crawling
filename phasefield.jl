@@ -325,7 +325,7 @@ module PhaseField
             # Plot
             heatmap(ϕ_all, title = "time = $(round((timestep*dt),digits = 0))", colormap = :Accent_4, colorbar = false, size = (800,800))
         end every 1000
-        gif(anim, "/home/pol/figs_rigged_new/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
+        gif(anim, "/home/pol/figs_rigged_alot/pf_$(N)_A_$(A)_B_$(B).gif", fps = 15);
     end
 
     # A bit tweaked (continuous )

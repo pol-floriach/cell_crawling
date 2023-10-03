@@ -10,12 +10,12 @@ include("/home/pol/cell_crawling/phasefield.jl")
 using Plots, .PhaseFieldConstants, .Numerical, .Initialize, .OtherFunctions, .PhaseField, ProgressBars
 
 # Mutable simulation parameters
-N = 4;
-nx = ny = 80;
+N = 36;
+nx = ny = 200;
 stoptime = 400.0;
 # repulsion = 2.3;
 
-params = Params(dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2);
+# params = Params(dt, dx, rodx, vol, ϵ, γ, τ, β, τ_ξ, σ2);
 
 # External diffusion parameters
 k = 1.4;# 1 
@@ -30,16 +30,16 @@ diffusion = Diffusion(k,σ_c,α,D);
 rang_integracio = parse(Int,ARGS[1])
 
 
-for i in 1:8
-    if rang_integracio == i 
+for i in 4:7
+    # if rang_integracio == i 
         #global A_range = i+0.5:1:Int(i+1)
         global B_range = (5*i-2.5):2.5:5*i
         println(B_range)
-    end
+    # end
 end
 
 
-for A in 2:10, B in B_range
+for A in 2:2:10, B in B_range
     rep = RepField(A, B)
     # @time phasefield3!(ϕ, ∇ϕ, ∇²ϕ, ξ, N, params, rep, stoptime)
     @time phasefield_rigged_2!(ϕ, ∇ϕ, ∇²ϕ, ξ, N, A, B, stoptime)
